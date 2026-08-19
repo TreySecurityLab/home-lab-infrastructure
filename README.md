@@ -46,12 +46,12 @@ No separate consumer router is part of the home-lab infrastructure. OPNsense is 
 | 20 | `WIN11-01` | 10.10.20.10 | Windows 11 workstation |
 | 30 | `WEB-01` | 10.10.30.10 | DMZ web server |
 | 50 | `DC-01` | 10.10.50.10 | Primary domain-controller workload |
-| 50 | `DC-02` | 10.10.50.20 | Planned server; exact resource allocation remains TBD |
+| 50 | `DC-02` | 10.10.50.20 | Planned/rotational second domain controller; approximately 3–4 GB RAM when active |
 | 50 | `FILE-01` | 10.10.50.30 | File server |
 | 50 | `LINUX-01` | 10.10.50.40 | Ubuntu/Linux server |
 | 60 | `KALI-01` | 10.10.60.10 | Bare-metal red-team host |
 
-The authoritative VLAN source assigns `DC-02` to 10.10.50.20, and its inclusion in the planned home lab has been explicitly confirmed. The current hardware/topology baseline does not yet define its RAM/vCPU allocation, so those values remain pending rather than inferred.
+`DC-02` is intentionally part of the planned home lab as a rotational second domain controller at 10.10.50.20 on VLAN 50 SERVERS. Its recommended RAM is approximately 3–4 GB, and it is not part of the normal always-on 22 GB Enterprise VM allocation unless the memory plan is later revised and re-verified.
 
 ## Current Switching Baseline
 
@@ -73,7 +73,7 @@ The authoritative VLAN source assigns `DC-02` to 10.10.50.20, and its inclusion 
 
 ## Virtualization Placement
 
-`ENTHOST-01` uses VLAN 10 for Proxmox management and carries guest workloads on VLANs 20, 30, and 50. `SECHOST-01` uses VLAN 10 for Proxmox management and VLAN 40 for the security stack. `KALI-01` is assigned to VLAN 60.
+`ENTHOST-01` uses VLAN 10 for Proxmox management and carries guest workloads on VLANs 20, 30, and 50. `DC-02` is a planned/rotational VLAN 50 workload deployed only after `DC-01` is stable. `SECHOST-01` uses VLAN 10 for Proxmox management and VLAN 40 for the security stack. `KALI-01` is assigned to VLAN 60.
 
 ## Security Telemetry
 
