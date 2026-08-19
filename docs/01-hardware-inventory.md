@@ -2,48 +2,71 @@
 
 ## Documentation Status
 
-**Authoritative inventory date:** August 16, 2026  
-**Purpose:** Record the physical systems, virtualization roles, and baseline workload memory allocation used by the home lab.
+**Authoritative inventory revision:** August 18, 2026  
+**Purpose:** Record the physical systems, virtualization roles, baseline workload memory allocation, and authoritative management/workload addressing used by the home lab.
 
-This page reflects the current hardware inventory source. Specifications that are not present in the source—such as CPU model, storage capacity, NIC model, and exact Proxmox node hostname—are intentionally not invented.
+This page reflects the updated hardware inventory plus the authoritative VLAN/host designation source. Specifications not present in those sources—such as CPU model, storage capacity, NIC model, exact Proxmox bridge names, and `DC-02` resource allocation—are intentionally not invented.
 
 ## Physical Systems
 
 | Hardware / Hostname | Platform / RAM | Purpose |
 |---|---|---|
-| Archer AXE75 | Wi-Fi router | Provides the home network Wi-Fi service and upstream Internet connection used by the lab. OPNsense connects downstream from this router. |
-| `opnsense-fw` | Bare-metal OPNsense / 8 GB RAM | Provides perimeter firewalling, NAT, lab VLAN routing, policy enforcement, and controlled connectivity between the lab and the upstream home network. |
-| `SW-Lab-01` | Aruba J9774A managed switch | Provides wired connectivity, VLAN segmentation, 802.1Q tagging/trunking, access-port assignment, and traffic mirroring for security monitoring. |
-| Enterprise Virtualization Host | 32 GB desktop / Proxmox VE | Hosts the primary server and workstation VMs used to simulate a small enterprise environment. |
-| Security Virtualization Host | 32 GB Ryzen laptop / Proxmox VE | Hosts centralized security monitoring, SIEM/XDR, network detection, DFIR, and threat-hunting workloads. |
-| Management Host | 16 GB laptop | Dedicated administrative system used to manage Proxmox, OPNsense, SW-Lab-01, servers, and other infrastructure without being repurposed as a lab target. |
-| Redteam Host | 16 GB laptop / Kali Linux bare metal | Dedicated offensive-security system for scanning, enumeration, attack simulation, exploitation exercises, and defensive-control validation. |
+| `opnsense-fw` | Bare-metal OPNsense / 8 GB RAM | ISP-facing edge firewall/router providing NAT, lab VLAN routing, policy enforcement, VPN capability, and controlled Internet connectivity |
+| `SW-Lab-01` | Aruba J9774A managed switch | Wired connectivity, VLAN segmentation, 802.1Q tagging/trunking, access-port assignment, and traffic mirroring |
+| `ENTHOST-01` | 32 GB desktop / Proxmox VE | Hosts enterprise server and workstation VMs |
+| `SECHOST-01` | 32 GB Ryzen laptop / Proxmox VE | Hosts SIEM/XDR, network detection, DFIR, and threat-hunting workloads |
+| `MGMT-01` | 16 GB laptop | Dedicated administration system for OPNsense, SW-Lab-01, Proxmox, servers, and other infrastructure |
+| `KALI-01` | 16 GB laptop / Kali Linux bare metal | Dedicated offensive-security system for scanning, enumeration, attack simulation, exploitation exercises, and defensive-control validation |
+
+**WAN placement:** OPNsense is the first lab routing/security device on the ISP-facing connection. No separate consumer router is part of the home-lab infrastructure.
+
+## Authoritative Host / IP Assignments
+
+| VLAN | Host / inventory label | Address | Purpose / status |
+|---:|---|---|---|
+| 10 MANAGEMENT | `opnsense-fw` / `OPNsense-FW` | 10.10.10.1 | OPNsense management gateway |
+| 10 MANAGEMENT | `SW-Lab-01` / `SW-LAB-01` | 10.10.10.2 | Switch management |
+| 10 MANAGEMENT | `ENTHOST-01` | 10.10.10.3 | Enterprise Proxmox management |
+| 10 MANAGEMENT | `SECHOST-01` | 10.10.10.4 | Security Proxmox management |
+| 10 MANAGEMENT | `MGMT-01` | 10.10.10.6 | Management Host |
+| 20 USERS | `WIN11-01` | 10.10.20.10 | Windows 11 workstation |
+| 30 DMZ | `WEB-01` | 10.10.30.10 | DMZ web server |
+| 50 SERVERS | `DC-01` | 10.10.50.10 | Primary domain-controller workload |
+| 50 SERVERS | `DC-02` | 10.10.50.20 | Planned server; exact services and resources remain TBD in the current five-source baseline |
+| 50 SERVERS | `FILE-01` | 10.10.50.30 | File server |
+| 50 SERVERS | `LINUX-01` | 10.10.50.40 | Ubuntu/Linux server |
+| 60 REDTEAM | `KALI-01` | 10.10.60.10 | Bare-metal red-team host |
+
+`DC-02` is intentionally part of the planned home lab. Its address is authoritative, but its RAM/vCPU allocation and exact service scope are not yet defined by the updated hardware or topology sources.
 
 ## Network Placement
 
 | System | Network placement |
 |---|---|
-| Management Host | VLAN 10 — MANAGEMENT |
-| `opnsense-fw` | WAN upstream to Archer AXE75; Layer-3 gateways for VLANs 10/20/30/40/50/60 |
+| `MGMT-01` | VLAN 10 — MANAGEMENT |
+| `opnsense-fw` | Direct ISP-facing WAN; Layer-3 gateways for VLANs 10/20/30/40/50/60 |
 | `SW-Lab-01` | Management on VLAN 10; Layer-2 transport for VLANs 10/20/30/40/50/60 |
-| Enterprise Virtualization Host | Proxmox management on VLAN 10; guests on VLANs 20, 30, and 50 |
-| Security Virtualization Host | Proxmox management on VLAN 10; security workloads on VLAN 40; passive sensor path planned separately |
-| Redteam Host | VLAN 60 — REDTEAM |
+| `ENTHOST-01` | Proxmox management on VLAN 10; guests on VLANs 20, 30, and 50 |
+| `SECHOST-01` | Proxmox management on VLAN 10; security workloads on VLAN 40; passive sensor path planned separately |
+| `KALI-01` | VLAN 60 — REDTEAM |
 
 ## Enterprise Virtualization Host
 
-**Platform:** 32 GB desktop running Proxmox VE.  
+**Platform:** `ENTHOST-01`, 32 GB desktop running Proxmox VE.  
 **Role:** Provide the virtualized enterprise systems required for Active Directory, Windows endpoint management, Linux administration, web services, file services, and security testing.
 
-| VM | Recommended RAM | Primary function | VLAN | Purpose in the home lab |
-|---|---:|---|---|---|
-| DC01 — Windows Server | 4 GB | Active Directory Domain Services + DNS | VLAN 50 — SERVERS | Provides the lab domain, centralized authentication, directory services, domain-joined identity, Group Policy testing, and AD-integrated DNS. |
-| Ubuntu Server | 4 GB | Linux server | VLAN 50 — SERVERS | General-purpose Linux server for administration, SSH, services, hardening, logging, automation, and security exercises. |
-| Web Server | 2 GB | DMZ web application/server | VLAN 30 — DMZ | Hosts an isolated web service for administration, hardening, logging, monitoring, and controlled attack/defense exercises. |
-| Windows 11 Workstation | 8 GB | Domain-joined user endpoint | VLAN 20 — USERS | Simulates a normal enterprise endpoint for Active Directory, Group Policy, endpoint logging, Sysmon, Wazuh agent deployment, and red-team/blue-team exercises. |
-| File Server | 4 GB | Centralized file services | VLAN 50 — SERVERS | Provides SMB/file shares, NTFS permissions, user/group access testing, audit logging, file-security scenarios, and centralized storage exercises. |
+| VM | Recommended RAM | Primary function | VLAN | Address | Purpose in the home lab |
+|---|---:|---|---|---|---|
+| `DC-01` — Windows Server | 4 GB | Active Directory Domain Services + DNS | VLAN 50 | 10.10.50.10 | Lab domain, centralized authentication, directory services, Group Policy testing, and AD-integrated DNS |
+| `LINUX-01` — Ubuntu Server | 4 GB | Linux server | VLAN 50 | 10.10.50.40 | Linux administration, SSH, services, hardening, logging, automation, and security exercises |
+| `WEB-01` — Web Server | 2 GB | DMZ web application/server | VLAN 30 | 10.10.30.10 | Isolated web service for hardening, monitoring, and controlled attack/defense exercises |
+| `WIN11-01` — Windows 11 Workstation | 8 GB | Domain-joined user endpoint | VLAN 20 | 10.10.20.10 | Active Directory, Group Policy, endpoint logging, Sysmon, Wazuh, and red/blue-team exercises |
+| `FILE-01` — File Server | 4 GB | Centralized file services | VLAN 50 | 10.10.50.30 | SMB/file shares, NTFS permissions, access testing, audit logging, and centralized storage exercises |
+| `DC-02` | TBD | Planned server | VLAN 50 | 10.10.50.20 | Intentionally planned; exact service role and resource allocation still require source update |
 
 ### Enterprise Host Memory Plan
+
+The updated hardware source defines the following baseline for the five fully specified enterprise VMs:
 
 | Allocation | RAM |
 |---|---:|
@@ -52,18 +75,18 @@ This page reflects the current hardware inventory source. Specifications that ar
 | Unallocated headroom | 6 GB |
 | Physical RAM | 32 GB |
 
-The 6 GB of remaining capacity is intentionally left available for hypervisor overhead, caching, temporary lab activity, short-lived test VMs, and modest growth. The design does not require every VM to run at maximum utilization simultaneously.
+The 22 GB guest allocation does **not** yet include a documented `DC-02` allocation. Before `DC-02` is deployed, its resource plan should be added to the authoritative hardware inventory and the host-memory plan recalculated.
 
 ## Security Virtualization Host
 
-**Platform:** 32 GB Ryzen laptop running Proxmox VE.  
+**Platform:** `SECHOST-01`, 32 GB Ryzen laptop running Proxmox VE.  
 **Role:** Dedicated blue-team platform for centralized telemetry, SIEM/XDR, network intrusion detection, protocol analysis, threat hunting, and digital forensics.
 
-| Security VM | Recommended RAM | Core tools / role | VLAN | Purpose in the home lab |
+| Security VM | Recommended RAM | Core tools / role | VLAN | Purpose |
 |---|---:|---|---|---|
-| Wazuh SIEM/XDR VM | 8 GB | Wazuh manager, indexer, dashboard | VLAN 40 — SECOPS | Centralizes endpoint/server telemetry, correlates alerts, performs file-integrity monitoring, security configuration assessment, vulnerability visibility, and investigation. |
-| Network Security Monitoring VM | 8 GB | Suricata + Zeek | VLAN 40 — SECOPS + passive sensor path | Receives mirrored network traffic, performs signature-based IDS inspection with Suricata, and creates network/protocol metadata with Zeek. |
-| DFIR / Threat Hunting VM | 4 GB | Velociraptor / investigation tools | VLAN 40 — SECOPS | Provides endpoint visibility, artifact collection, live response, triage, threat hunting, and digital-forensics workflows without placing those tools on the Management Host. |
+| Wazuh SIEM/XDR VM | 8 GB | Wazuh manager, indexer, dashboard | VLAN 40 — SECOPS | Centralized telemetry, alert correlation, FIM, security configuration assessment, vulnerability visibility, and investigation |
+| Network Security Monitoring VM | 8 GB | Suricata + Zeek | VLAN 40 — SECOPS + passive sensor path | IDS inspection and network/protocol metadata from mirrored traffic |
+| DFIR / Threat Hunting VM | 4 GB | Velociraptor / investigation tools | VLAN 40 — SECOPS | Endpoint visibility, artifact collection, live response, triage, threat hunting, and DFIR |
 
 ### Security Host Memory Plan
 
@@ -78,12 +101,9 @@ The 6 GB of remaining capacity is intentionally left available for hypervisor ov
 
 Wazuh is the baseline central SIEM/XDR platform. Suricata and Zeek share the Network Security Monitoring VM, while Velociraptor remains separate for DFIR and threat hunting. Splunk or Security Onion may be introduced later as rotational training workloads rather than always-on baseline VMs.
 
-## Intended Telemetry Flow
-
-Enterprise servers and endpoints send host telemetry to Wazuh. `SW-Lab-01` can mirror selected network traffic to the Network Security Monitoring VM for Suricata and Zeek analysis. The DFIR VM is used when deeper endpoint collection, triage, or threat hunting is required. The Management Host remains separate from these workloads and is used to administer the environment.
-
 ## Source Basis
 
-- *Home Lab Hardware Inventory* — authoritative physical hardware and VM memory plan.
-- *Home Lab Network Topology Overview* — network placement and virtualization VLAN mapping.
-- *OPNsense Home Lab Configuration, Phases 3–12* — current firewall/switch interface baseline and management addressing.
+- *Home Lab Hardware Inventory — UPDATED* — physical systems, VM roles, and baseline memory plans.
+- *Authoritative VLAN Designations — final* — authoritative hostnames/inventory labels and IP assignments.
+- *Home Lab Network Topology Overview — UPDATED* — direct ISP placement, VLAN placement, virtualization roles, and telemetry flow.
+- *OPNsense Home Lab Configuration — UPDATED* — direct ISP WAN and current firewall/switch interface baseline.

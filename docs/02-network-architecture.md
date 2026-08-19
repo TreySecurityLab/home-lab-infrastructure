@@ -4,30 +4,53 @@
 
 The home lab is designed around a routed security boundary with Layer-2 VLAN transport behind it:
 
-**Internet → Archer AXE75 → `opnsense-fw` → `SW-Lab-01` (Aruba J9774A) → segmented VLANs, management systems, Proxmox hosts, and lab workloads**
+**Internet / ISP → `opnsense-fw` → `SW-Lab-01` (Aruba J9774A) → segmented VLANs, management systems, Proxmox hosts, and lab workloads**
 
-`opnsense-fw` is the Layer-3 gateway and policy-enforcement point for all six lab VLANs. `SW-Lab-01` is Layer-2 only and transports 802.1Q-tagged traffic between OPNsense and VLAN-aware hosts.
+`opnsense-fw` is directly connected to the ISP and is the Layer-3 gateway and policy-enforcement point for all six lab VLANs. `SW-Lab-01` is Layer-2 only and transports 802.1Q-tagged traffic between OPNsense and VLAN-aware hosts.
+
+No separate consumer router is part of the authoritative home-lab topology.
 
 ## Authoritative VLAN Topology
 
 | VLAN | Name | Network | OPNsense gateway | Primary systems / role | Security purpose |
 |---:|---|---|---|---|---|
-| 10 | MANAGEMENT | 10.10.10.0/24 | 10.10.10.1 | Management Host, OPNsense management, SW-Lab-01 management, Proxmox management | Administrative control plane |
-| 20 | USERS | 10.10.20.0/24 | 10.10.20.1 | Windows 11 Workstation | Simulated enterprise user / endpoint network |
-| 30 | DMZ | 10.10.30.0/24 | 10.10.30.1 | Web Server VM | Isolated web-server and controlled attack/defense zone |
+| 10 | MANAGEMENT | 10.10.10.0/24 | 10.10.10.1 | `MGMT-01`, OPNsense management, `SW-Lab-01`, `ENTHOST-01`, `SECHOST-01` | Administrative control plane |
+| 20 | USERS | 10.10.20.0/24 | 10.10.20.1 | `WIN11-01` | Simulated enterprise user / endpoint network |
+| 30 | DMZ | 10.10.30.0/24 | 10.10.30.1 | `WEB-01` | Isolated web-server and controlled attack/defense zone |
 | 40 | SECOPS | 10.10.40.0/24 | 10.10.40.1 | Wazuh, Suricata/Zeek management, Velociraptor / DFIR | Blue-team monitoring, detection, and investigation |
-| 50 | SERVERS | 10.10.50.0/24 | 10.10.50.1 | DC01, Ubuntu Server, File Server | Internal enterprise infrastructure |
-| 60 | REDTEAM | 10.10.60.0/24 | 10.10.60.1 | Kali Redteam Host | Offensive-security and attack-simulation network |
+| 50 | SERVERS | 10.10.50.0/24 | 10.10.50.1 | `DC-01`, `DC-02` (planned), `FILE-01`, `LINUX-01` | Internal enterprise infrastructure |
+| 60 | REDTEAM | 10.10.60.0/24 | 10.10.60.1 | `KALI-01` | Offensive-security and attack-simulation network |
+
+The updated topology source currently diagrams DC01, Ubuntu, and File Server on VLAN 50; the authoritative VLAN source also assigns `DC-02` to VLAN 50, and its planned inclusion has been explicitly confirmed. Exact `DC-02` resources/services remain pending.
+
+## Authoritative Host / IP Assignments
+
+| VLAN | Host | Address |
+|---:|---|---|
+| 10 | `OPNsense-FW` (configured hostname `opnsense-fw`) | 10.10.10.1 |
+| 10 | `SW-LAB-01` / `SW-Lab-01` | 10.10.10.2 |
+| 10 | `ENTHOST-01` | 10.10.10.3 |
+| 10 | `SECHOST-01` | 10.10.10.4 |
+| 10 | `MGMT-01` | 10.10.10.6 |
+| 20 | `WIN11-01` | 10.10.20.10 |
+| 30 | `WEB-01` | 10.10.30.10 |
+| 50 | `DC-01` | 10.10.50.10 |
+| 50 | `DC-02` | 10.10.50.20 |
+| 50 | `FILE-01` | 10.10.50.30 |
+| 50 | `LINUX-01` | 10.10.50.40 |
+| 60 | `KALI-01` | 10.10.60.10 |
+
+No authoritative static host assignments are currently listed for VLAN 40 SECOPS workloads in the final designation source.
 
 ## Physical Interface and Switch-Port Baseline
 
 | Component | Interface / port | Current role | Tagging / addressing |
 |---|---|---|---|
-| Archer AXE75 | LAN | Upstream for OPNsense WAN | Router: 192.168.1.1; OPNsense WAN lease is dynamic and should not be hard-coded in public documentation |
-| `opnsense-fw` | `re0` | WAN | IPv4 DHCP from Archer AXE75 |
+| Internet / ISP | Service handoff | Direct upstream for OPNsense WAN | ISP-supplied addressing; do not hard-code public/ISP-assigned details |
+| `opnsense-fw` | `re0` | WAN | Direct ISP-facing WAN |
 | `opnsense-fw` | `ue0` (validated runtime) | LAN/VLAN parent toward `SW-Lab-01` | Carries VLAN tags 10/20/30/40/50/60 |
 | `SW-Lab-01` | Port 1 | OPNsense trunk | Tagged VLANs 10/20/30/40/50/60; no final untagged lab VLAN documented |
-| `SW-Lab-01` | Port 8 | MANAGEMENT PC access | Untagged VLAN 10 |
+| `SW-Lab-01` | Port 8 | `MGMT-01` / MANAGEMENT PC access | Untagged VLAN 10 |
 | `SW-Lab-01` | Ports 2–7, 9+ | TBD | No permanent lab role documented; do not infer |
 | `SW-Lab-01` | Management SVI | Switch management | 10.10.10.2/24; default gateway 10.10.10.1 |
 
@@ -37,24 +60,24 @@ Port 7 and 192.168.99.0/24 were used temporarily while VLAN 10 was repaired. The
 
 ## Virtualization VLAN Placement
 
-### Enterprise Virtualization Host
+### `ENTHOST-01` — Enterprise Virtualization Host
 
-- VLAN 10 — Proxmox management
-- VLAN 20 — Windows 11 Workstation
-- VLAN 30 — Web Server
-- VLAN 50 — DC01, Ubuntu Server, File Server
+- VLAN 10 — Proxmox management, 10.10.10.3
+- VLAN 20 — `WIN11-01`, 10.10.20.10
+- VLAN 30 — `WEB-01`, 10.10.30.10
+- VLAN 50 — `DC-01`, `DC-02` (planned), `FILE-01`, `LINUX-01`
 
-### Security Virtualization Host
+### `SECHOST-01` — Security Virtualization Host
 
-- VLAN 10 — Proxmox management
+- VLAN 10 — Proxmox management, 10.10.10.4
 - VLAN 40 — Wazuh SIEM/XDR
 - VLAN 40 — Suricata + Zeek management
 - VLAN 40 — Velociraptor / DFIR
 - Separate passive sensor interface — receives mirrored traffic from `SW-Lab-01` when the SPAN/mirror destination is implemented
 
-### Redteam Host
+### `KALI-01` — Redteam Host
 
-- VLAN 60 — bare-metal Kali Linux
+- VLAN 60 — bare-metal Kali Linux, 10.10.60.10
 
 ## DHCP and Addressing Model
 
@@ -63,17 +86,17 @@ Dynamic addressing is used only where endpoint churn is expected. Infrastructure
 | VLAN | DHCP | Addressing policy |
 |---:|---|---|
 | 10 MANAGEMENT | No | Static/reserved infrastructure addresses |
-| 20 USERS | Yes | 10.10.20.100–10.10.20.199 |
+| 20 USERS | Yes | 10.10.20.100–10.10.20.199, while `WIN11-01` has an authoritative static assignment of 10.10.20.10 |
 | 30 DMZ | No | Static service addresses |
 | 40 SECOPS | Yes | 10.10.40.100–10.10.40.199 |
 | 50 SERVERS | No | Static server addresses |
-| 60 REDTEAM | Yes | 10.10.60.100–10.10.60.199 |
+| 60 REDTEAM | Yes | 10.10.60.100–10.10.60.199, while `KALI-01` has an authoritative static assignment of 10.10.60.10 |
 
 ## Security Telemetry Flow
 
 ### Host telemetry → Wazuh
 
-Windows 11, DC01, Ubuntu Server, File Server, and Web Server provide agent/log telemetry to Wazuh on VLAN 40. Wazuh is the centralized alerting, correlation, file-integrity monitoring, and security-configuration assessment platform.
+The updated topology defines Windows 11, DC01, Ubuntu Server, File Server, and Web Server as host-telemetry sources for Wazuh on VLAN 40. `DC-02` should not be assumed to send telemetry until its service role and deployment are defined and verified.
 
 ### Mirrored network traffic → Suricata + Zeek
 
@@ -85,10 +108,11 @@ Suspicious endpoints can be triaged and collected through the Velociraptor/DFIR 
 
 ### Management separation
 
-The Management Host remains separate from security workloads and investigation targets. VLAN 10 is the administrative control plane and is intentionally distinct from USERS, DMZ, SECOPS workload traffic, SERVERS, and REDTEAM.
+`MGMT-01` remains separate from security workloads and investigation targets. VLAN 10 is the administrative control plane and is intentionally distinct from USERS, DMZ, SECOPS workload traffic, SERVERS, and REDTEAM.
 
 ## Source Basis
 
-- *Authoritative VLAN Designations* — VLAN IDs, names, and /24 networks.
-- *Home Lab Network Topology Overview* — physical path, workload placement, virtualization trunks, and telemetry flow.
-- *OPNsense Home Lab Configuration, Phases 3–12* — current gateway, DHCP, interface, and switch-port baseline.
+- *Authoritative VLAN Designations — final* — VLAN IDs, names, /24 networks, and host/IP assignments.
+- *Home Lab Network Topology Overview — UPDATED* — direct ISP path, workload placement, virtualization trunks, and telemetry flow.
+- *OPNsense Home Lab Configuration — UPDATED* — direct ISP WAN, gateway, DHCP, interface, and switch-port baseline.
+- *Home Lab Hardware Inventory — UPDATED* — physical/virtual host roles and memory plans.

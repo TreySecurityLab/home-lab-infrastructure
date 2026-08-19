@@ -2,30 +2,33 @@
 
 ## Documentation Status
 
-The source material defines the **virtualization architecture, workload placement, and memory plan**, but it does not document exact Proxmox bridge names, Linux interface names, storage pools, VM IDs, CPU allocations, or live firewall configuration. Those implementation details should be added only after they are captured from the running Proxmox hosts.
+The source material defines the virtualization architecture, workload placement, host management addresses, and baseline memory plans. Exact Proxmox bridge names, Linux interface names, storage pools, VM IDs, CPU allocations, and live firewall configuration remain pending until captured from the running hosts.
 
 ## Virtualization Design
 
 Two separate 32 GB Proxmox VE hosts divide enterprise workloads from security-monitoring/DFIR workloads.
 
-| Host | Platform | Primary role | Management placement | Guest/workload placement |
-|---|---|---|---|---|
-| Enterprise Virtualization Host | 32 GB desktop / Proxmox VE | Small-enterprise servers and Windows endpoint simulation | VLAN 10 — MANAGEMENT | VLAN 20 USERS, VLAN 30 DMZ, VLAN 50 SERVERS |
-| Security Virtualization Host | 32 GB Ryzen laptop / Proxmox VE | SIEM/XDR, network security monitoring, DFIR, and threat hunting | VLAN 10 — MANAGEMENT | VLAN 40 — SECOPS plus a separate passive monitoring path when implemented |
+| Host | Address | Platform | Primary role | Management placement | Guest/workload placement |
+|---|---|---|---|---|---|
+| `ENTHOST-01` | 10.10.10.3 | 32 GB desktop / Proxmox VE | Small-enterprise servers and Windows endpoint simulation | VLAN 10 — MANAGEMENT | VLAN 20 USERS, VLAN 30 DMZ, VLAN 50 SERVERS |
+| `SECHOST-01` | 10.10.10.4 | 32 GB Ryzen laptop / Proxmox VE | SIEM/XDR, network security monitoring, DFIR, and threat hunting | VLAN 10 — MANAGEMENT | VLAN 40 — SECOPS plus a separate passive monitoring path when implemented |
 
-## Enterprise Virtualization Host
+## `ENTHOST-01` — Enterprise Virtualization Host
 
 ### Baseline Workloads
 
-| VM | RAM | VLAN | Role |
-|---|---:|---|---|
-| DC01 — Windows Server | 4 GB | 50 SERVERS | Active Directory Domain Services + DNS |
-| Ubuntu Server | 4 GB | 50 SERVERS | General-purpose Linux server |
-| Web Server | 2 GB | 30 DMZ | Isolated web application/server |
-| Windows 11 Workstation | 8 GB | 20 USERS | Domain-joined user endpoint |
-| File Server | 4 GB | 50 SERVERS | Centralized file services |
+| VM | Address | RAM | VLAN | Role |
+|---|---|---:|---|---|
+| `DC-01` — Windows Server | 10.10.50.10 | 4 GB | 50 SERVERS | Active Directory Domain Services + DNS |
+| `LINUX-01` — Ubuntu Server | 10.10.50.40 | 4 GB | 50 SERVERS | General-purpose Linux server |
+| `WEB-01` — Web Server | 10.10.30.10 | 2 GB | 30 DMZ | Isolated web application/server |
+| `WIN11-01` — Windows 11 Workstation | 10.10.20.10 | 8 GB | 20 USERS | Domain-joined user endpoint |
+| `FILE-01` — File Server | 10.10.50.30 | 4 GB | 50 SERVERS | Centralized file services |
+| `DC-02` | 10.10.50.20 | TBD | 50 SERVERS | Intentionally planned; exact service role/resource allocation still pending source update |
 
 ### Memory Plan
+
+The updated hardware source defines this plan for the five fully specified enterprise VMs:
 
 | Allocation | RAM |
 |---|---:|
@@ -34,9 +37,9 @@ Two separate 32 GB Proxmox VE hosts divide enterprise workloads from security-mo
 | Unallocated headroom | 6 GB |
 | Physical RAM | 32 GB |
 
-The 6 GB headroom is intentionally retained for Proxmox overhead, caching, temporary lab activity, short-lived test VMs, and modest growth.
+`DC-02` is not included in that 22 GB total because the current hardware source does not assign it RAM. The memory plan must be recalculated before `DC-02` deployment.
 
-## Security Virtualization Host
+## `SECHOST-01` — Security Virtualization Host
 
 ### Baseline Workloads
 
@@ -45,6 +48,8 @@ The 6 GB headroom is intentionally retained for Proxmox overhead, caching, tempo
 | Wazuh SIEM/XDR VM | 8 GB | VLAN 40 — SECOPS | Wazuh manager, indexer, dashboard |
 | Network Security Monitoring VM | 8 GB | VLAN 40 — SECOPS + passive monitoring interface | Suricata + Zeek |
 | DFIR / Threat Hunting VM | 4 GB | VLAN 40 — SECOPS | Velociraptor / investigation tools |
+
+The final authoritative VLAN designation source does not yet assign static IP addresses to these VLAN 40 workloads, so none are invented here.
 
 ### Memory Plan
 
@@ -59,29 +64,31 @@ The 6 GB headroom is intentionally retained for Proxmox overhead, caching, tempo
 
 ### Management Plane
 
-Both Proxmox hosts are administered from VLAN 10 MANAGEMENT. The management plane is intentionally separated from normal user, DMZ, server, security-workload, and red-team traffic.
+Both Proxmox hosts are administered from VLAN 10 MANAGEMENT:
+
+- `ENTHOST-01` — 10.10.10.3
+- `SECHOST-01` — 10.10.10.4
+- Administrative access originates from `MGMT-01` — 10.10.10.6
 
 ### Enterprise Guest Networks
 
-The Enterprise host must be capable of presenting VLANs 20, 30, and 50 to the appropriate VMs while retaining host management on VLAN 10.
+`ENTHOST-01` must be capable of presenting VLANs 20, 30, and 50 to the appropriate VMs while retaining host management on VLAN 10.
 
 ### Security Guest Networks
 
-The Security host uses VLAN 40 for Wazuh, Suricata/Zeek management, and Velociraptor/DFIR.
+`SECHOST-01` uses VLAN 40 for Wazuh, Suricata/Zeek management, and Velociraptor/DFIR.
 
 ### Passive Sensor Path
 
-The Network Security Monitoring VM is designed to receive mirrored switch traffic over a separate sensor path. This passive NIC is conceptually distinct from the normal VLAN 40 management interface. The source design does not yet assign the final Aruba mirror destination port, so the repository must not invent one.
+The Network Security Monitoring VM is designed to receive mirrored switch traffic over a separate sensor path. This passive NIC is conceptually distinct from the normal VLAN 40 management interface. The final Aruba mirror destination port is not assigned in the current source and must not be invented.
 
 ## Optional / Rotational Workloads
 
-Splunk and Security Onion are not part of the always-on baseline. They may be introduced later as rotational training workloads so the core Wazuh/NSM/DFIR design retains the required RAM headroom.
+Splunk and Security Onion are not part of the always-on baseline. They may be introduced later as rotational training workloads so the core Wazuh/NSM/DFIR design retains required RAM headroom.
 
 ## Implementation Details Still Requiring Live Evidence
 
-The following should remain undocumented or explicitly marked pending until verified from the hosts:
-
-- Proxmox node hostnames
+- Exact Proxmox node/FQDN configuration beyond the authoritative inventory labels
 - Physical NIC/interface names
 - Linux bridge names
 - VLAN-aware bridge configuration
@@ -92,21 +99,15 @@ The following should remain undocumented or explicitly marked pending until veri
 - Proxmox firewall rules
 - Backup jobs and destinations
 - Exact passive sensor NIC / mirror-destination port
+- `DC-02` RAM/vCPU and exact service role
 
 ## Evidence Targets
 
-When the live configuration is ready, capture:
-
-- Proxmox node summary for each host
-- Network/bridge configuration showing VLAN-aware design
-- Enterprise VM inventory
-- Security VM inventory
-- Per-VM network/VLAN assignment
-- Host management placement on VLAN 10
-- Security sensor's distinct monitoring NIC after the mirror path is implemented
+When live configuration is ready, capture node summaries, network/bridge configuration, VM inventories, per-VM VLAN assignments, host management placement, storage configuration, and the separate security-sensor NIC after the mirror path is implemented.
 
 ## Source Basis
 
-- *Home Lab Hardware Inventory* — virtualization host roles, VM allocations, and RAM plans.
-- *Home Lab Network Topology Overview* — VLAN placement and passive security-sensor path.
-- *OPNsense Home Lab Configuration, Phases 3–12* — VLAN gateway design and current switch trunk baseline.
+- *Home Lab Hardware Inventory — UPDATED* — virtualization host roles, VM allocations, and RAM plans.
+- *Authoritative VLAN Designations — final* — Proxmox host labels/addresses and enterprise workload hostname/IP assignments.
+- *Home Lab Network Topology Overview — UPDATED* — VLAN placement and passive security-sensor path.
+- *OPNsense Home Lab Configuration — UPDATED* — VLAN gateway design and current switch trunk baseline.

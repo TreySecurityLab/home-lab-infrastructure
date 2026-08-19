@@ -10,8 +10,8 @@ Because switch/access-port assignments other than port 8 remain TBD, MANAGEMENT 
 
 | Test | Expected result | Current evidence status |
 |---|---|---|
-| MANAGEMENT PC on port 8 → 10.10.10.1 | Ping/WebUI succeeds | VLAN 10 reachability was previously recovered; recapture clean final evidence on port 8 |
-| MANAGEMENT PC → 10.10.10.2 | Aruba WebUI/ping succeeds | Expected from VLAN 10 management design; capture clean evidence |
+| `MGMT-01` (10.10.10.6) on port 8 → 10.10.10.1 | Ping/WebUI succeeds | VLAN 10 reachability was previously recovered; recapture clean final evidence on port 8 |
+| `MGMT-01` → 10.10.10.2 | Aruba WebUI/ping succeeds | Expected from VLAN 10 management design; capture clean evidence |
 | OPNsense Interfaces → Overview | Six VLAN interfaces enabled with `.1/24` addresses | Capture after final activation/verification of VLANs 20–60 |
 | USERS DHCP | Lease in 10.10.20.100–199; gateway/DNS through 10.10.20.1 | Pending endpoint/access-port assignment |
 | SECOPS DHCP | Lease in 10.10.40.100–199; gateway/DNS through 10.10.40.1 | Pending endpoint/access-port assignment |
@@ -20,6 +20,25 @@ Because switch/access-port assignments other than port 8 remain TBD, MANAGEMENT 
 | MANAGEMENT/SECOPS → lab networks | Allowed | Validate when endpoints exist |
 | Restricted zones → OPNsense WebUI | Blocked; DNS to firewall remains allowed | Validate with endpoint test + Firewall Live View |
 | Outbound Internet | Allowed per zone policy | Validate after DHCP/static clients are attached |
+
+## Authoritative Static Host Validation Targets
+
+These addresses should be validated when their systems are deployed and attached to the correct VLAN. A successful ping alone does not prove full system configuration; record VLAN placement, address/gateway settings, and expected firewall behavior as part of each acceptance test.
+
+| Host | Address | VLAN | Validation status |
+|---|---|---:|---|
+| `opnsense-fw` / `OPNsense-FW` | 10.10.10.1 | 10 | Management gateway; clean evidence still needed |
+| `SW-Lab-01` / `SW-LAB-01` | 10.10.10.2 | 10 | Clean management evidence still needed |
+| `ENTHOST-01` | 10.10.10.3 | 10 | Validate after Proxmox management placement is complete |
+| `SECHOST-01` | 10.10.10.4 | 10 | Validate after Proxmox management placement is complete |
+| `MGMT-01` | 10.10.10.6 | 10 | Validate on Aruba port 8 |
+| `WIN11-01` | 10.10.20.10 | 20 | Validate after VM/VLAN attachment |
+| `WEB-01` | 10.10.30.10 | 30 | Validate after VM/VLAN attachment |
+| `DC-01` | 10.10.50.10 | 50 | Validate after VM/VLAN attachment |
+| `DC-02` | 10.10.50.20 | 50 | Planned; do not validate as deployed until resources/services are defined and VM exists |
+| `FILE-01` | 10.10.50.30 | 50 | Validate after VM/VLAN attachment |
+| `LINUX-01` | 10.10.50.40 | 50 | Validate after VMware-to-Proxmox migration and VLAN placement |
+| `KALI-01` | 10.10.60.10 | 60 | Validate after final VLAN 60 attachment |
 
 ## Firewall Validation Matrix
 
@@ -47,11 +66,7 @@ For each test, record:
 
 ## Required Management Validation Evidence
 
-The current source specifically calls for:
-
-`validation-management-connectivity.png`
-
-The capture should show reachability from the Management Host to:
+`validation-management-connectivity.png` should show reachability from `MGMT-01` to:
 
 - 10.10.10.1 — OPNsense MANAGEMENT gateway/WebUI
 - 10.10.10.2 — `SW-Lab-01` management interface
@@ -60,14 +75,16 @@ Do not show credentials.
 
 ## Aruba Validation Evidence
 
-Two switch captures are directly tied to the OPNsense trunk/access design:
-
 - `aruba-port1-opnsense-trunk.png` — port 1 Tagged in VLANs 10/20/30/40/50/60
 - `aruba-port8-management-access.png` — VLAN 10 shows port 1 Tagged and port 8 Untagged
 
 ## OPNsense Rule Validation
 
 At minimum, capture the complete ordered rule sets for MANAGEMENT and SECOPS and one representative restricted zone. Validate denied flows with **Firewall → Log Files → Live View** so the repository contains both endpoint behavior and firewall evidence.
+
+## WAN Validation
+
+OPNsense is directly ISP-facing. Validate WAN status from OPNsense without publishing public/ISP-assigned WAN details. Do not rely on any test or screenshot that depicts a consumer router as part of the current lab path.
 
 ## Troubleshooting Sequence
 
@@ -81,9 +98,10 @@ If validation fails, use the source-preserved sequence before changing architect
 
 ## Do Not Mark Pending Tests as Successful
 
-VLANs 20/30/40/50/60 still require permanent endpoint/host attachment and clean validation evidence. The repository should clearly label those tests **Pending** until the relevant systems are connected and the expected allow/block behavior is demonstrated.
+VLANs 20/30/40/50/60 still require permanent endpoint/host attachment and clean validation evidence. `DC-02` is planned but must remain pending until its resource/service definition and deployment are completed.
 
 ## Source Basis
 
-- *OPNsense Home Lab Configuration, Phases 3–12* — current acceptance-test matrix, troubleshooting sequence, and evidence filenames.
-- *Home Lab Network Topology Overview* — intended traffic and security-zone relationships.
+- *OPNsense Home Lab Configuration — UPDATED* — current acceptance-test matrix, troubleshooting sequence, evidence filenames, and direct ISP WAN.
+- *Authoritative VLAN Designations — final* — authoritative host/IP validation targets.
+- *Home Lab Network Topology Overview — UPDATED* — intended traffic and security-zone relationships.
