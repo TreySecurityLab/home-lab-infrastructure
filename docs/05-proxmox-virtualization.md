@@ -24,20 +24,21 @@ Two separate 32 GB Proxmox VE hosts divide enterprise workloads from security-mo
 | `WEB-01` — Web Server | 10.10.30.10 | 2 GB | 30 DMZ | Isolated web application/server |
 | `WIN11-01` — Windows 11 Workstation | 10.10.20.10 | 8 GB | 20 USERS | Domain-joined user endpoint |
 | `FILE-01` — File Server | 10.10.50.30 | 4 GB | 50 SERVERS | Centralized file services |
-| `DC-02` | 10.10.50.20 | TBD | 50 SERVERS | Intentionally planned; exact service role/resource allocation still pending source update |
+| `DC-02` — Windows Server | 10.10.50.20 | 3–4 GB | 50 SERVERS | Planned/rotational second domain controller + DNS; deploy after `DC-01` is stable |
 
 ### Memory Plan
 
-The updated hardware source defines this plan for the five fully specified enterprise VMs:
+The normal always-on baseline for the five primary enterprise VMs remains:
 
 | Allocation | RAM |
 |---|---:|
-| Guest VM allocation | 22 GB |
+| Always-on baseline guest VM allocation | 22 GB |
 | Reserved for Proxmox host | 4 GB |
-| Unallocated headroom | 6 GB |
+| Unallocated baseline headroom | 6 GB |
 | Physical RAM | 32 GB |
+| `DC-02` rotational allocation | Approximately 3–4 GB additional only while active |
 
-`DC-02` is not included in that 22 GB total because the current hardware source does not assign it RAM. The memory plan must be recalculated before `DC-02` deployment.
+`DC-02` is intentionally **not** included in the normal 22 GB guest total. When it is powered on for second-domain-controller exercises, its approximately 3–4 GB comes from available headroom or by rotating another workload off. Do not treat `DC-02` as continuously running unless the architecture is later revised and re-verified.
 
 ## `SECHOST-01` — Security Virtualization Host
 
@@ -84,7 +85,7 @@ The Network Security Monitoring VM is designed to receive mirrored switch traffi
 
 ## Optional / Rotational Workloads
 
-Splunk and Security Onion are not part of the always-on baseline. They may be introduced later as rotational training workloads so the core Wazuh/NSM/DFIR design retains required RAM headroom.
+`DC-02` is a planned/rotational Enterprise workload. Splunk and Security Onion are also not part of their hosts' always-on baselines and may be introduced later as rotational training workloads so required RAM headroom is preserved.
 
 ## Implementation Details Still Requiring Live Evidence
 
@@ -99,11 +100,15 @@ Splunk and Security Onion are not part of the always-on baseline. They may be in
 - Proxmox firewall rules
 - Backup jobs and destinations
 - Exact passive sensor NIC / mirror-destination port
-- `DC-02` RAM/vCPU and exact service role
+- `DC-02` vCPU, storage, and final deployment evidence
 
 ## Evidence Targets
 
 When live configuration is ready, capture node summaries, network/bridge configuration, VM inventories, per-VM VLAN assignments, host management placement, storage configuration, and the separate security-sensor NIC after the mirror path is implemented.
+
+## Verified-State Rule
+
+Planned VMs, VLAN placement, and sensor paths described here are design targets only. They become operational facts only after installation, configuration, testing, and verification evidence are complete.
 
 ## Source Basis
 
