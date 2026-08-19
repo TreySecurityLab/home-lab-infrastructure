@@ -18,10 +18,10 @@ No separate consumer router is part of the authoritative home-lab topology.
 | 20 | USERS | 10.10.20.0/24 | 10.10.20.1 | `WIN11-01` | Simulated enterprise user / endpoint network |
 | 30 | DMZ | 10.10.30.0/24 | 10.10.30.1 | `WEB-01` | Isolated web-server and controlled attack/defense zone |
 | 40 | SECOPS | 10.10.40.0/24 | 10.10.40.1 | Wazuh, Suricata/Zeek management, Velociraptor / DFIR | Blue-team monitoring, detection, and investigation |
-| 50 | SERVERS | 10.10.50.0/24 | 10.10.50.1 | `DC-01`, `DC-02` (planned), `FILE-01`, `LINUX-01` | Internal enterprise infrastructure |
+| 50 | SERVERS | 10.10.50.0/24 | 10.10.50.1 | `DC-01`, `DC-02` (planned/rotational), `FILE-01`, `LINUX-01` | Internal enterprise infrastructure |
 | 60 | REDTEAM | 10.10.60.0/24 | 10.10.60.1 | `KALI-01` | Offensive-security and attack-simulation network |
 
-The updated topology source currently diagrams DC01, Ubuntu, and File Server on VLAN 50; the authoritative VLAN source also assigns `DC-02` to VLAN 50, and its planned inclusion has been explicitly confirmed. Exact `DC-02` resources/services remain pending.
+`DC-02` is intentionally part of VLAN 50 as a planned/rotational second domain controller at 10.10.50.20. Its recommended RAM is approximately 3–4 GB while active, and it is not part of the normal always-on 22 GB Enterprise VM allocation. Remaining implementation details such as vCPU and storage should be recorded only after deployment planning is finalized.
 
 ## Authoritative Host / IP Assignments
 
@@ -65,7 +65,9 @@ Port 7 and 192.168.99.0/24 were used temporarily while VLAN 10 was repaired. The
 - VLAN 10 — Proxmox management, 10.10.10.3
 - VLAN 20 — `WIN11-01`, 10.10.20.10
 - VLAN 30 — `WEB-01`, 10.10.30.10
-- VLAN 50 — `DC-01`, `DC-02` (planned), `FILE-01`, `LINUX-01`
+- VLAN 50 — `DC-01`, `DC-02` (planned/rotational), `FILE-01`, `LINUX-01`
+
+`DC-02` is deployed only after `DC-01` is stable. Its approximately 3–4 GB RAM is rotational and remains outside the normal always-on 22 GB Enterprise guest allocation.
 
 ### `SECHOST-01` — Security Virtualization Host
 
@@ -96,7 +98,7 @@ Dynamic addressing is used only where endpoint churn is expected. Infrastructure
 
 ### Host telemetry → Wazuh
 
-The updated topology defines Windows 11, DC01, Ubuntu Server, File Server, and Web Server as host-telemetry sources for Wazuh on VLAN 40. `DC-02` should not be assumed to send telemetry until its service role and deployment are defined and verified.
+The topology defines Windows 11, `DC-01`, `LINUX-01`, `FILE-01`, and `WEB-01` as intended host-telemetry sources for Wazuh on VLAN 40 after their agents are deployed and verified. `DC-02` joins that telemetry flow only while the rotational VM is deployed and after its Wazuh agent is installed and verified.
 
 ### Mirrored network traffic → Suricata + Zeek
 
@@ -109,6 +111,10 @@ Suspicious endpoints can be triaged and collected through the Velociraptor/DFIR 
 ### Management separation
 
 `MGMT-01` remains separate from security workloads and investigation targets. VLAN 10 is the administrative control plane and is intentionally distinct from USERS, DMZ, SECOPS workload traffic, SERVERS, and REDTEAM.
+
+## Verified-State Rule
+
+This document is the approved design baseline. A VM, VLAN placement, security agent, passive sensor interface, or mirror path must not be presented as operational until it has been installed, configured, tested, and verified.
 
 ## Source Basis
 
