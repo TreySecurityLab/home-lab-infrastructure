@@ -9,11 +9,13 @@ This page records the baseline virtual workloads defined by the updated hardware
 | Hostname | Address | RAM | Network | Primary function | Status / purpose |
 |---|---|---:|---|---|---|
 | `DC-01` | 10.10.50.10 | 4 GB | VLAN 50 — SERVERS | Active Directory Domain Services + DNS | Baseline planned enterprise workload |
-| `DC-02` | 10.10.50.20 | TBD | VLAN 50 — SERVERS | Exact services TBD | Intentionally planned; exact resource allocation and service scope are not yet defined in the five-source baseline |
+| `DC-02` | 10.10.50.20 | 3–4 GB | VLAN 50 — SERVERS | Second domain controller + DNS | Planned/rotational; deploy after `DC-01` is stable; not part of the normal always-on 22 GB allocation |
 | `FILE-01` | 10.10.50.30 | 4 GB | VLAN 50 — SERVERS | Centralized file services | SMB/file shares, NTFS permissions, access testing, audit logging, and storage exercises |
-| `LINUX-01` | 10.10.50.40 | 4 GB | VLAN 50 — SERVERS | Ubuntu/Linux server | Linux administration, SSH, services, hardening, logging, automation, and security exercises |
+| `LINUX-01` | 10.10.50.40 | 4 GB | VLAN 50 — SERVERS | Ubuntu/Linux server | Primary Linux/ChatGPT lab server after VMware-to-Proxmox migration and validation |
 | `WEB-01` | 10.10.30.10 | 2 GB | VLAN 30 — DMZ | DMZ web application/server | Isolated web service for hardening, logging, monitoring, and controlled attack/defense exercises |
 | `WIN11-01` | 10.10.20.10 | 8 GB | VLAN 20 — USERS | Domain-joined user endpoint | Active Directory, Group Policy, endpoint logging, Sysmon, Wazuh, and red/blue-team exercises |
+
+The normal Enterprise Host always-on guest allocation remains 22 GB across `DC-01`, `LINUX-01`, `WEB-01`, `WIN11-01`, and `FILE-01`. `DC-02` is an additional rotational workload using approximately 3–4 GB only while active.
 
 ## Security Workloads
 
@@ -38,15 +40,14 @@ The final authoritative hostname/IP source does not currently assign static addr
 
 The updated topology source defines the following intended relationships:
 
-- `WIN11-01` → Wazuh agent/log telemetry
-- `DC-01` → Wazuh agent/log telemetry
-- `LINUX-01` → Wazuh agent/Linux telemetry
-- `FILE-01` → Wazuh agent/log telemetry
-- `WEB-01` → Wazuh agent/Linux or server telemetry
-- Selected network traffic → `SW-Lab-01` mirror/SPAN → Suricata + Zeek passive sensor
-- Suspicious endpoint → Velociraptor / DFIR triage and collection
-
-`DC-02` is not added to the telemetry list until its exact service role and deployment are defined and verified.
+- `WIN11-01` → Wazuh agent/log telemetry after deployment and verification
+- `DC-01` → Wazuh agent/log telemetry after deployment and verification
+- `LINUX-01` → Wazuh agent/Linux telemetry after deployment and verification
+- `FILE-01` → Wazuh agent/log telemetry after deployment and verification
+- `WEB-01` → Wazuh agent/Linux or server telemetry after deployment and verification
+- `DC-02` → Wazuh telemetry only while the rotational VM is deployed and after its agent is installed and verified
+- Selected network traffic → `SW-Lab-01` mirror/SPAN → Suricata + Zeek passive sensor after the mirror path is configured and verified
+- Suspicious endpoint → Velociraptor / DFIR triage and collection after the server and clients are operational
 
 ## Network Gateways and Addressing
 
@@ -62,9 +63,13 @@ The updated topology source defines the following intended relationships:
 
 As each VM is installed, extend this page only with verified facts such as system name, role, VLAN, OS/version, allocated RAM/vCPU, storage, deployment state, and evidence links. Do not publish passwords, domain secrets, activation keys, private keys, or other authentication material.
 
-## `DC-02` Source Gap
+## `DC-02` Planned / Rotational Baseline
 
-The authoritative VLAN source assigns `DC-02` to 10.10.50.20, and its planned inclusion has been explicitly confirmed. The updated hardware inventory and topology do not yet define its RAM/vCPU allocation or exact role. Those source documents should be revised before `DC-02` becomes an operational prerequisite or is counted in the enterprise-host memory plan.
+`DC-02` is intentionally part of the home-lab design at 10.10.50.20 on VLAN 50 SERVERS. It is a planned/rotational second domain controller and DNS server requiring approximately 3–4 GB RAM. It should be deployed only after `DC-01` is stable and should not be counted in the normal always-on 22 GB Enterprise VM allocation unless the memory plan is later revised and verified.
+
+## Verified-State Rule
+
+Planned workloads and telemetry relationships must not be presented as operational until the corresponding VM, network placement, service, agent, or sensor path has been installed, configured, tested, and verified.
 
 ## Source Basis
 
