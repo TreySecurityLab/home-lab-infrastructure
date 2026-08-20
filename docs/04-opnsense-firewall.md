@@ -100,7 +100,7 @@ The authoritative host/IP source uses 10.10.10.1 as the `OPNsense-FW` inventory 
 
 Dnsmasq provides DHCP on USERS, SECOPS, and REDTEAM. Dnsmasq **Listen Port = 0** intentionally disables its DNS function. Unbound remains the primary recursive/caching DNS resolver on TCP/UDP 53.
 
-The separate authoritative host/IP design includes static addresses outside the DHCP pools for `WIN11-01` (10.10.20.10) and `KALI-01` (10.10.60.10).
+The separate authoritative host/IP design includes static addresses outside the DHCP pools for `WIN11-01` (10.10.20.10) and `READTEAM-01` (10.10.60.10).
 
 ## `LAB_NETWORKS` Alias
 
