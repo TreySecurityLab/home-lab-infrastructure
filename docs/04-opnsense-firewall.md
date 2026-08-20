@@ -151,8 +151,10 @@ USERS, DMZ, SERVERS, and REDTEAM use the restricted-zone pattern described in th
 | Switch port | Role | VLAN membership |
 |---|---|---|
 | Port 1 | OPNsense trunk | Tagged 10/20/30/40/50/60 |
+| Port 6 | `MGMT-BACKUP` | Untagged VLAN 10 |
+| Port 7 | `ENTHOST-01` physical attachment | Untagged VLAN 10 |
 | Port 8 | `MGMT-01` / MANAGEMENT PC access | Untagged VLAN 10 |
-| Ports 2–7, 9+ | TBD | Do not infer a permanent role |
+| Ports 2–5, 9+ | TBD | Do not infer a permanent role |
 
 `SW-Lab-01` management is 10.10.10.2/24 with gateway 10.10.10.1.
 
