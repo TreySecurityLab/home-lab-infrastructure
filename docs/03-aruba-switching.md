@@ -96,23 +96,20 @@ The Aruba guide identifies time synchronization, SNMPv3, port status, VLAN infor
 
 ## Evidence Status
 
-The final switch evidence was captured on August 20, 2026 and is pending sanitized upload to `screenshots/aruba/`.
+The final sanitized SW-Lab-01 evidence set was uploaded on August 20, 2026.
 
-| Evidence category | Current status |
+| Evidence | File |
 |---|---|
-| Switch identity / firmware baseline | Captured; pending upload |
-| Management IP and default gateway | Captured; pending upload |
-| Port 1 tagged OPNsense trunk | Captured; pending upload |
-| Port 6 `MGMT-BACKUP` VLAN 10 access | Captured/previously validated; pending repository evidence placement as applicable |
-| Port 7 `ENTHOST-01` attachment | Captured in current switch state; pending upload |
-| Port 8 `MGMT-01` VLAN 10 access | Captured; pending upload |
-| Firmware transfer / post-upgrade firmware | Captured; pending upload |
-| SNMP state before hardening | Captured; pending upload |
-| SNMPv3 successful validation | Captured; pending upload |
-| Legacy SNMPv2c failure after hardening | Captured; pending upload |
-| Saved configuration / reboot persistence | Captured; pending upload |
-| Time synchronization | Captured as `13-time-sync.png`; pending upload |
+| Port 1 membership across the six lab VLANs | [`01-switch-baseline-01-trunk-vlans.png`](../screenshots/aruba/01-switch-baseline-01-trunk-vlans.png) |
+| VLAN 10 tagged/untagged port membership | [`02-switch-baseline-02-vlan10-membership.png`](../screenshots/aruba/02-switch-baseline-02-vlan10-membership.png) |
+| Management IP and default gateway | [`03-switch-baseline-03-management-ip-gateway.png`](../screenshots/aruba/03-switch-baseline-03-management-ip-gateway.png) |
+| Firmware before upgrade (`YA.16.06.0006`) | [`04-switch-baseline-04-firmware-before.png`](../screenshots/aruba/04-switch-baseline-04-firmware-before.png) |
+| Firmware after upgrade (`YA.16.10.0010`) | [`05-switch-baseline-05-firmware-after.png`](../screenshots/aruba/05-switch-baseline-05-firmware-after.png) |
+| Successful SNMPv3 monitoring validation | [`06-switch-baseline-06-snmpv3-success.png`](../screenshots/aruba/06-switch-baseline-06-snmpv3-success.png) |
+| Legacy public SNMP community removed | [`07-switch-baseline-07-public-community-removed.png`](../screenshots/aruba/07-switch-baseline-07-public-community-removed.png) |
+| SNTP configuration/status and current switch time | [`08-switch-baseline-08-sntp-status.png`](../screenshots/aruba/08-switch-baseline-08-sntp-status.png) |
 
+This public evidence set is intentionally concise. Additional troubleshooting/intermediate captures may remain local. Public evidence is sanitized to exclude credentials, SNMP secrets/community values, serial numbers, complete MAC addresses, and unnecessary personal identifiers.
 ## Historical Recovery Note
 
 Port 7 temporarily carried recovery connectivity while VLAN 10 was repaired. That recovery role is no longer current. Port 7 is now assigned to `ENTHOST-01`. The historical 192.168.99.0/24 recovery network is not part of the permanent architecture.

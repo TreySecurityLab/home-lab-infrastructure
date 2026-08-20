@@ -73,7 +73,7 @@ No separate consumer router is part of the home-lab infrastructure. OPNsense is 
 - Time synchronization was configured and verified.
 - SNMPv3 was enabled and a dedicated authenticated monitoring user was validated from the management network.
 - Legacy SNMPv1/v2c access using the former public community was tested after hardening and failed as intended, while SNMPv3 continued to succeed.
-- Final screenshot evidence was captured and is pending sanitized upload under `screenshots/aruba/`.
+- Final sanitized screenshot evidence is stored under `screenshots/aruba/`.
 
 ## OPNsense Policy Baseline
 
