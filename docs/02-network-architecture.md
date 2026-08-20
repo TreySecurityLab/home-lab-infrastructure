@@ -19,7 +19,7 @@ No separate consumer router is part of the authoritative home-lab topology.
 | 30 | DMZ | 10.10.30.0/24 | 10.10.30.1 | `WEB-01` | Isolated web-server and controlled attack/defense zone |
 | 40 | SECOPS | 10.10.40.0/24 | 10.10.40.1 | Wazuh, Suricata/Zeek management, Velociraptor / DFIR | Blue-team monitoring, detection, and investigation |
 | 50 | SERVERS | 10.10.50.0/24 | 10.10.50.1 | `DC-01`, `DC-02` (planned/rotational), `FILE-01`, `LINUX-01` | Internal enterprise infrastructure |
-| 60 | REDTEAM | 10.10.60.0/24 | 10.10.60.1 | `READTEAM-01` | Offensive-security and attack-simulation network |
+| 60 | REDTEAM | 10.10.60.0/24 | 10.10.60.1 | `REDTEAM-01` | Offensive-security and attack-simulation network |
 
 `DC-02` is intentionally part of VLAN 50 as a planned/rotational second domain controller at 10.10.50.20. Its recommended RAM is approximately 3–4 GB while active, and it is not part of the normal always-on 22 GB Enterprise VM allocation. Remaining implementation details such as vCPU and storage should be recorded only after deployment planning is finalized.
 
@@ -31,15 +31,15 @@ No separate consumer router is part of the authoritative home-lab topology.
 | 10 | `SW-LAB-01` / `SW-Lab-01` | 10.10.10.2 |
 | 10 | `ENTHOST-01` | 10.10.10.3 |
 | 10 | `SECHOST-01` | 10.10.10.4 |
-| 10 | `MGMT-01` | 10.10.10.6 |
-| 10 | `MGMT-BACKUP` | 10.10.10.10 when locally attached |
+| 10 | `MGMT-01` | 10.10.10.5 |
+| 10 | `MGMT-BACKUP` | 10.10.10.6 when locally attached |
 | 20 | `WIN11-01` | 10.10.20.10 |
 | 30 | `WEB-01` | 10.10.30.10 |
 | 50 | `DC-01` | 10.10.50.10 |
 | 50 | `DC-02` | 10.10.50.20 |
 | 50 | `FILE-01` | 10.10.50.30 |
 | 50 | `LINUX-01` | 10.10.50.40 |
-| 60 | `READTEAM-01` | 10.10.60.10 |
+| 60 | `REDTEAM-01` | 10.10.60.10 |
 
 No authoritative static host assignments are currently listed for VLAN 40 SECOPS workloads in the final designation source.
 
@@ -81,7 +81,7 @@ Port 7 and 192.168.99.0/24 were used temporarily while VLAN 10 was repaired. Tha
 - VLAN 40 — Velociraptor / DFIR
 - Separate passive sensor interface — receives mirrored traffic from `SW-Lab-01` when the SPAN/mirror destination is implemented
 
-### `READTEAM-01` — Redteam Host
+### `REDTEAM-01` — Redteam Host
 
 - VLAN 60 — bare-metal Kali Linux, 10.10.60.10
 
@@ -96,7 +96,7 @@ Dynamic addressing is used only where endpoint churn is expected. Infrastructure
 | 30 DMZ | No | Static service addresses |
 | 40 SECOPS | Yes | 10.10.40.100–10.10.40.199 |
 | 50 SERVERS | No | Static server addresses |
-| 60 REDTEAM | Yes | 10.10.60.100–10.10.60.199, while `READTEAM-01` has an authoritative static assignment of 10.10.60.10 |
+| 60 REDTEAM | Yes | 10.10.60.100–10.10.60.199, while `REDTEAM-01` has an authoritative static assignment of 10.10.60.10 |
 
 ## Security Telemetry Flow
 

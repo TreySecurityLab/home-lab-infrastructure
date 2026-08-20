@@ -19,7 +19,7 @@ OPNsense is the Layer-3 enforcement point. `SW-Lab-01` provides Layer-2 separati
 
 ## Dedicated Management Plane
 
-`MGMT-01` (10.10.10.6), `MGMT-BACKUP` (10.10.10.10 when locally attached), OPNsense management (10.10.10.1), `SW-Lab-01` management (10.10.10.2), `ENTHOST-01` (10.10.10.3), and `SECHOST-01` (10.10.10.4) use VLAN 10 MANAGEMENT.
+`MGMT-01` (10.10.10.5), `MGMT-BACKUP` (10.10.10.6 when locally attached), OPNsense management (10.10.10.1), `SW-Lab-01` management (10.10.10.2), `ENTHOST-01` (10.10.10.3), and `SECHOST-01` (10.10.10.4) use VLAN 10 MANAGEMENT.
 
 `MGMT-01` is the primary dedicated management system. `MGMT-BACKUP` provides a secondary administrative path when required. The baseline firewall policy permits MANAGEMENT to administer OPNsense over HTTPS and reach lab networks while blocking other unnecessary access to the firewall itself.
 
@@ -78,7 +78,7 @@ SECOPS is a trusted security-administration zone. Its baseline rules permit DNS 
 
 Dnsmasq provides DHCP only on USERS, SECOPS, and REDTEAM. Its DNS function is disabled with Listen Port 0. Unbound remains the primary recursive/caching DNS resolver on port 53.
 
-Dynamic pools are 10.10.20.100–199, 10.10.40.100–199, and 10.10.60.100–199. The authoritative host/IP baseline separately defines `WIN11-01` at 10.10.20.10 and `READTEAM-01` at 10.10.60.10 outside those pools.
+Dynamic pools are 10.10.20.100–199, 10.10.40.100–199, and 10.10.60.100–199. The authoritative host/IP baseline separately defines `WIN11-01` at 10.10.20.10 and `REDTEAM-01` at 10.10.60.10 outside those pools.
 
 ## WAN Exposure Control
 
@@ -88,7 +88,7 @@ WAN-addressing details are ISP-supplied and are not hard-coded in the public rep
 
 ## Red-Team Isolation
 
-`READTEAM-01` is the bare-metal Kali Redteam Host at 10.10.60.10 on VLAN 60 REDTEAM and should be treated as attacker-controlled during exercises. Its baseline policy allows DNS and outbound Internet but blocks initiation to other lab VLANs and blocks management access to OPNsense.
+`REDTEAM-01` is the bare-metal Kali Redteam Host at 10.10.60.10 on VLAN 60 REDTEAM and should be treated as attacker-controlled during exercises. Its baseline policy allows DNS and outbound Internet but blocks initiation to other lab VLANs and blocks management access to OPNsense.
 
 ## Host Telemetry and SIEM/XDR
 

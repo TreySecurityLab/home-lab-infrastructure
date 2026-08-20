@@ -16,8 +16,8 @@ This page reflects the updated hardware inventory plus the authoritative VLAN/ho
 | `ENTHOST-01` | 32 GB desktop / Proxmox VE | Hosts enterprise server and workstation VMs |
 | `SECHOST-01` | 32 GB Ryzen laptop / Proxmox VE | Hosts SIEM/XDR, network detection, DFIR, and threat-hunting workloads |
 | `MGMT-01` | 16 GB laptop | Dedicated administration system for OPNsense, SW-Lab-01, Proxmox, servers, and other infrastructure |
-| `MGMT-BACKUP` | Laptop | Backup/remote administration system; local VLAN 10 address 10.10.10.10/24 when physically connected |
-| `READTEAM-01` | 16 GB laptop / Kali Linux bare metal | Dedicated offensive-security system for scanning, enumeration, attack simulation, exploitation exercises, and defensive-control validation |
+| `MGMT-BACKUP` | Laptop | Backup/remote administration system; local VLAN 10 address 10.10.10.6/24 when physically connected |
+| `REDTEAM-01` | 16 GB laptop / Kali Linux bare metal | Dedicated offensive-security system for scanning, enumeration, attack simulation, exploitation exercises, and defensive-control validation |
 
 **WAN placement:** OPNsense is the first lab routing/security device on the ISP-facing connection. No separate consumer router is part of the home-lab infrastructure.
 
@@ -29,15 +29,15 @@ This page reflects the updated hardware inventory plus the authoritative VLAN/ho
 | 10 MANAGEMENT | `SW-Lab-01` / `SW-LAB-01` | 10.10.10.2 | Switch management |
 | 10 MANAGEMENT | `ENTHOST-01` | 10.10.10.3 | Enterprise Proxmox management |
 | 10 MANAGEMENT | `SECHOST-01` | 10.10.10.4 | Security Proxmox management |
-| 10 MANAGEMENT | `MGMT-01` | 10.10.10.6 | Management Host |
-| 10 MANAGEMENT | `MGMT-BACKUP` | 10.10.10.10 | Backup management laptop when locally connected |
+| 10 MANAGEMENT | `MGMT-01` | 10.10.10.5 | Management Host |
+| 10 MANAGEMENT | `MGMT-BACKUP` | 10.10.10.6 | Backup management laptop when locally connected |
 | 20 USERS | `WIN11-01` | 10.10.20.10 | Windows 11 workstation |
 | 30 DMZ | `WEB-01` | 10.10.30.10 | DMZ web server |
 | 50 SERVERS | `DC-01` | 10.10.50.10 | Primary domain-controller workload |
 | 50 SERVERS | `DC-02` | 10.10.50.20 | Planned/rotational second domain controller; approximately 3–4 GB RAM when active |
 | 50 SERVERS | `FILE-01` | 10.10.50.30 | File server |
 | 50 SERVERS | `LINUX-01` | 10.10.50.40 | Ubuntu/Linux server |
-| 60 REDTEAM | `READTEAM-01` | 10.10.60.10 | Bare-metal red-team host |
+| 60 REDTEAM | `REDTEAM-01` | 10.10.60.10 | Bare-metal red-team host |
 
 `DC-02` is intentionally part of the planned home lab as a rotational second domain controller on VLAN 50. Its address is authoritative and its recommended RAM is approximately 3–4 GB. It is not part of the normal always-on 22 GB enterprise guest allocation unless the architecture is later revised and re-verified.
 
@@ -51,7 +51,7 @@ This page reflects the updated hardware inventory plus the authoritative VLAN/ho
 | `SW-Lab-01` | Management on VLAN 10; Layer-2 transport for VLANs 10/20/30/40/50/60 |
 | `ENTHOST-01` | Physically attached to SW-Lab-01 port 7; Proxmox management on VLAN 10; guests planned on VLANs 20, 30, and 50 |
 | `SECHOST-01` | Proxmox management on VLAN 10; security workloads on VLAN 40; passive sensor path planned separately |
-| `READTEAM-01` | VLAN 60 — REDTEAM |
+| `REDTEAM-01` | VLAN 60 — REDTEAM |
 
 ## Enterprise Virtualization Host
 

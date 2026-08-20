@@ -10,9 +10,9 @@ The current switch-port baseline now includes ports 1, 6, 7, and 8. Port 1 is th
 
 | Test | Expected result | Current evidence status |
 |---|---|---|
-| `MGMT-01` (10.10.10.6) on port 8 → 10.10.10.1 | Ping/WebUI succeeds | VLAN 10 management path established; dedicated connectivity evidence is not part of the final public Aruba evidence set |
+| `MGMT-01` (10.10.10.5) on port 8 → 10.10.10.1 | Ping/WebUI succeeds | VLAN 10 management path established; dedicated connectivity evidence is not part of the final public Aruba evidence set |
 | `MGMT-01` → 10.10.10.2 | Aruba WebUI/ping succeeds | Management connectivity verified; dedicated connectivity evidence is not part of the final public Aruba evidence set |
-| `MGMT-BACKUP` (10.10.10.10 when local) on port 6 → `MGMT-01` / switch management | VLAN 10 connectivity succeeds | PASS; port 6 untagged VLAN 10 and local reachability previously validated |
+| `MGMT-BACKUP` (10.10.10.6 when local) on port 6 → `MGMT-01` / switch management | VLAN 10 connectivity succeeds | PASS; port 6 untagged VLAN 10 and local reachability previously validated |
 | SW-Lab-01 firmware | Switch boots and operates on `YA.16.10.0010` | PASS; post-upgrade reboot validation completed; sanitized before/after firmware evidence uploaded |
 | SW-Lab-01 SNMPv3 | Authenticated SNMPv3 query succeeds | PASS; validated from management environment; sanitized success evidence uploaded |
 | SW-Lab-01 legacy SNMPv2c/public | Legacy query fails after SNMPv3 hardening | PASS; negative validation completed; repository evidence shows the legacy public community removed |
@@ -20,7 +20,7 @@ The current switch-port baseline now includes ports 1, 6, 7, and 8. Port 1 is th
 | OPNsense Interfaces → Overview | Six VLAN interfaces enabled with `.1/24` addresses | Capture after final activation/verification of VLANs 20–60 |
 | USERS DHCP | Lease in 10.10.20.100–199; gateway/DNS through 10.10.20.1 | Pending endpoint/access-port assignment |
 | SECOPS DHCP | Lease in 10.10.40.100–199; gateway/DNS through 10.10.40.1 | Pending endpoint/access-port assignment |
-| REDTEAM DHCP | Lease in 10.10.60.100–199; gateway/DNS through 10.10.60.1 | Pending final `READTEAM-01` VLAN 60 attachment/validation |
+| REDTEAM DHCP | Lease in 10.10.60.100–199; gateway/DNS through 10.10.60.1 | Pending final `REDTEAM-01` VLAN 60 attachment/validation |
 | USERS/DMZ/SERVERS/REDTEAM → other lab VLANs | Blocked when initiated from restricted zone | Validate when endpoints exist |
 | MANAGEMENT/SECOPS → lab networks | Allowed | Validate when endpoints exist |
 | Restricted zones → OPNsense WebUI | Blocked; DNS to firewall remains allowed | Validate with endpoint test + Firewall Live View |
@@ -36,15 +36,15 @@ These addresses should be validated when their systems are deployed and attached
 | `SW-Lab-01` / `SW-LAB-01` | 10.10.10.2 | 10 | Management, firmware, SNMPv3, time-sync, and persistence validation completed; final sanitized evidence set uploaded |
 | `ENTHOST-01` | 10.10.10.3 | 10 | Physical attachment on port 7 established; Proxmox management/VLAN-aware bridge validation still pending |
 | `SECHOST-01` | 10.10.10.4 | 10 | Validate after Proxmox management placement is complete |
-| `MGMT-01` | 10.10.10.6 | 10 | Port 8 untagged VLAN 10; management path established |
-| `MGMT-BACKUP` | 10.10.10.10 when locally attached | 10 | PASS for local VLAN 10 reachability on port 6 |
+| `MGMT-01` | 10.10.10.5 | 10 | Port 8 untagged VLAN 10; management path established |
+| `MGMT-BACKUP` | 10.10.10.6 when locally attached | 10 | PASS for local VLAN 10 reachability on port 6 |
 | `WIN11-01` | 10.10.20.10 | 20 | Validate after VM/VLAN attachment |
 | `WEB-01` | 10.10.30.10 | 30 | Validate after VM/VLAN attachment |
 | `DC-01` | 10.10.50.10 | 50 | Validate after VM/VLAN attachment |
 | `DC-02` | 10.10.50.20 | 50 | Planned/rotational second DC + DNS; validate after deployment |
 | `FILE-01` | 10.10.50.30 | 50 | Validate after VM/VLAN attachment |
 | `LINUX-01` | 10.10.50.40 | 50 | Validate after VMware-to-Proxmox migration and VLAN placement |
-| `READTEAM-01` | 10.10.60.10 | 60 | Validate after final VLAN 60 attachment |
+| `REDTEAM-01` | 10.10.60.10 | 60 | Validate after final VLAN 60 attachment |
 
 ## Firewall Validation Matrix
 

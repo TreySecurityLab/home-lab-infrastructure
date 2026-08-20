@@ -19,8 +19,8 @@ OPNsense is directly connected to the ISP and is the lab edge firewall/router. I
 | `ENTHOST-01` | 32 GB desktop / Proxmox VE | Enterprise server and workstation virtualization host |
 | `SECHOST-01` | 32 GB Ryzen laptop / Proxmox VE | Wazuh SIEM/XDR, Suricata/Zeek NSM, and Velociraptor/DFIR virtualization host |
 | `MGMT-01` | 16 GB laptop | Dedicated infrastructure administration system |
-| `MGMT-BACKUP` | Laptop | Backup/remote management system; local VLAN 10 address 10.10.10.10/24 when physically connected |
-| `READTEAM-01` | 16 GB laptop / Kali Linux bare metal | Offensive-security testing and defensive-control validation |
+| `MGMT-BACKUP` | Laptop | Backup/remote management system; local VLAN 10 address 10.10.10.6/24 when physically connected |
+| `REDTEAM-01` | 16 GB laptop / Kali Linux bare metal | Offensive-security testing and defensive-control validation |
 
 No separate consumer router is part of the home-lab infrastructure. OPNsense is the first lab routing/security device on the ISP-facing connection.
 
@@ -43,15 +43,15 @@ No separate consumer router is part of the home-lab infrastructure. OPNsense is 
 | 10 | `SW-Lab-01` / inventory label `SW-LAB-01` | 10.10.10.2 | Switch management |
 | 10 | `ENTHOST-01` | 10.10.10.3 | Enterprise Proxmox management |
 | 10 | `SECHOST-01` | 10.10.10.4 | Security Proxmox management |
-| 10 | `MGMT-01` | 10.10.10.6 | Management Host |
-| 10 | `MGMT-BACKUP` | 10.10.10.10 | Backup management laptop when locally attached to VLAN 10 |
+| 10 | `MGMT-01` | 10.10.10.5 | Management Host |
+| 10 | `MGMT-BACKUP` | 10.10.10.6 | Backup management laptop when locally attached to VLAN 10 |
 | 20 | `WIN11-01` | 10.10.20.10 | Windows 11 workstation |
 | 30 | `WEB-01` | 10.10.30.10 | DMZ web server |
 | 50 | `DC-01` | 10.10.50.10 | Primary domain-controller workload |
 | 50 | `DC-02` | 10.10.50.20 | Planned/rotational second domain controller; approximately 3–4 GB RAM when active |
 | 50 | `FILE-01` | 10.10.50.30 | File server |
 | 50 | `LINUX-01` | 10.10.50.40 | Ubuntu/Linux server |
-| 60 | `READTEAM-01` | 10.10.60.10 | Bare-metal red-team host |
+| 60 | `REDTEAM-01` | 10.10.60.10 | Bare-metal red-team host |
 
 `DC-02` is intentionally part of the planned home lab as a rotational second domain controller at 10.10.50.20 on VLAN 50 SERVERS. Its recommended RAM is approximately 3–4 GB, and it is not part of the normal always-on 22 GB Enterprise VM allocation unless the memory plan is later revised and re-verified.
 
@@ -88,7 +88,7 @@ No separate consumer router is part of the home-lab infrastructure. OPNsense is 
 
 ## Virtualization Placement
 
-`ENTHOST-01` uses VLAN 10 for Proxmox management and carries guest workloads on VLANs 20, 30, and 50. `DC-02` is a planned/rotational VLAN 50 workload deployed only after `DC-01` is stable. `SECHOST-01` uses VLAN 10 for Proxmox management and VLAN 40 for the security stack. `READTEAM-01` is assigned to VLAN 60.
+`ENTHOST-01` uses VLAN 10 for Proxmox management and carries guest workloads on VLANs 20, 30, and 50. `DC-02` is a planned/rotational VLAN 50 workload deployed only after `DC-01` is stable. `SECHOST-01` uses VLAN 10 for Proxmox management and VLAN 40 for the security stack. `REDTEAM-01` is assigned to VLAN 60.
 
 ## Security Telemetry
 

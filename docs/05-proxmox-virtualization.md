@@ -73,7 +73,7 @@ Both Proxmox hosts are administered from VLAN 10 MANAGEMENT:
 
 - `ENTHOST-01` — 10.10.10.3; physically connected to SW-Lab-01 port 7
 - `SECHOST-01` — 10.10.10.4
-- Administrative access originates primarily from `MGMT-01` — 10.10.10.6; `MGMT-BACKUP` can provide a secondary VLAN 10 management path when locally connected at 10.10.10.10
+- Administrative access originates primarily from `MGMT-01` — 10.10.10.5; `MGMT-BACKUP` can provide a secondary VLAN 10 management path when locally connected at 10.10.10.6
 
 ### Enterprise Guest Networks
 
@@ -93,7 +93,7 @@ The Network Security Monitoring VM is designed to receive mirrored switch traffi
 
 ## Relevant Physical Test Host
 
-`READTEAM-01` is the bare-metal Kali Linux red-team host at 10.10.60.10 on VLAN 60 REDTEAM. It is not a Proxmox VM.
+`REDTEAM-01` is the bare-metal Kali Linux red-team host at 10.10.60.10 on VLAN 60 REDTEAM. It is not a Proxmox VM.
 
 ## Implementation Details Still Requiring Live Evidence
 

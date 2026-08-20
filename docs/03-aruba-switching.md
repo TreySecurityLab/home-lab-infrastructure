@@ -32,11 +32,11 @@ The Aruba 2530 Management and Configuration Guide for AOS-S 16.10 explicitly lis
 
 **Port 1** is the final OPNsense trunk and carries VLANs 10/20/30/40/50/60 as tagged traffic. There is no final untagged lab VLAN documented on this trunk.
 
-**Port 6** is the backup-management access port. `MGMT-BACKUP` was validated on VLAN 10 with local address 10.10.10.10/24 while physically connected.
+**Port 6** is the backup-management access port. `MGMT-BACKUP` was validated on VLAN 10 with local address 10.10.10.6/24 while physically connected.
 
 **Port 7** is now the permanent physical attachment for `ENTHOST-01`. The prior temporary recovery use of this port is historical only. Final VLAN-aware guest tagging for VLANs 20/30/50 will be documented after the Proxmox networking work is completed and verified.
 
-**Port 8** is the primary MANAGEMENT access port for `MGMT-01` at 10.10.10.6.
+**Port 8** is the primary MANAGEMENT access port for `MGMT-01` at 10.10.10.5.
 
 ## Completed Management, Firmware, and Security Baseline — August 20, 2026
 
