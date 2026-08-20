@@ -161,7 +161,7 @@ USERS, DMZ, SERVERS, and REDTEAM use the restricted-zone pattern described in th
 ## Recovery History — Not Permanent Topology
 
 - 192.168.99.0/24 was used as a temporary recovery LAN while VLAN 10 was repaired.
-- Aruba port 7 temporarily carried VLAN 1 untagged during recovery; it is now TBD.
+- Aruba port 7 temporarily carried VLAN 1 untagged during recovery; its current physical attachment is ENTHOST-01, with final Proxmox VLAN-aware guest-trunk details pending live validation.
 - A temporary `PASS MANAGEMENT net → any` rule was used to avoid lockout during VLAN 10 activation. It should not remain as part of the final security baseline once permanent rules are validated.
 
 ## Evidence Targets
