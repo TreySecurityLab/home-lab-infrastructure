@@ -31,10 +31,11 @@ The final authoritative hostname/IP source does not currently assign static addr
 
 | System | Address | Network | Role |
 |---|---|---|---|
-| `MGMT-01` | 10.10.10.6 | VLAN 10 — MANAGEMENT | Trusted administrative workstation for infrastructure management |
-| `ENTHOST-01` | 10.10.10.3 | VLAN 10 — MANAGEMENT | Enterprise Proxmox host |
+| `MGMT-01` | 10.10.10.6 | VLAN 10 — MANAGEMENT | Trusted primary administrative workstation for infrastructure management |
+| `MGMT-BACKUP` | 10.10.10.10 when locally attached | VLAN 10 — MANAGEMENT | Backup/remote administrative laptop |
+| `ENTHOST-01` | 10.10.10.3 | VLAN 10 — MANAGEMENT | Enterprise Proxmox host; physical switch attachment is SW-Lab-01 port 7 |
 | `SECHOST-01` | 10.10.10.4 | VLAN 10 — MANAGEMENT | Security Proxmox host |
-| `KALI-01` | 10.10.60.10 | VLAN 60 — REDTEAM | Bare-metal Kali Linux attacker-simulation / offensive-security platform |
+| `READTEAM-01` | 10.10.60.10 | VLAN 60 — REDTEAM | Bare-metal Kali Linux attacker-simulation / offensive-security platform |
 
 ## Telemetry Relationships
 
@@ -57,7 +58,7 @@ The updated topology source defines the following intended relationships:
 | 30 DMZ | 10.10.30.1 | `WEB-01` 10.10.30.10 | Static service addressing |
 | 40 SECOPS | 10.10.40.1 | None defined in final hostname/IP source | DHCP pool 10.10.40.100–199 |
 | 50 SERVERS | 10.10.50.1 | `DC-01` .10, `DC-02` .20, `FILE-01` .30, `LINUX-01` .40 | Static server addressing |
-| 60 REDTEAM | 10.10.60.1 | `KALI-01` 10.10.60.10 | DHCP pool 10.10.60.100–199 also exists for dynamic endpoints |
+| 60 REDTEAM | 10.10.60.1 | `READTEAM-01` 10.10.60.10 | DHCP pool 10.10.60.100–199 also exists for dynamic endpoints |
 
 ## Deployment Tracking
 
