@@ -19,7 +19,8 @@ OPNsense is directly connected to the ISP and is the lab edge firewall/router. I
 | `ENTHOST-01` | 32 GB desktop / Proxmox VE | Enterprise server and workstation virtualization host |
 | `SECHOST-01` | 32 GB Ryzen laptop / Proxmox VE | Wazuh SIEM/XDR, Suricata/Zeek NSM, and Velociraptor/DFIR virtualization host |
 | `MGMT-01` | 16 GB laptop | Dedicated infrastructure administration system |
-| `KALI-01` | 16 GB laptop / Kali Linux bare metal | Offensive-security testing and defensive-control validation |
+| `MGMT-BACKUP` | Laptop | Backup/remote management system; local VLAN 10 address 10.10.10.10/24 when physically connected |
+| `READTEAM-01` | 16 GB laptop / Kali Linux bare metal | Offensive-security testing and defensive-control validation |
 
 No separate consumer router is part of the home-lab infrastructure. OPNsense is the first lab routing/security device on the ISP-facing connection.
 
@@ -43,22 +44,36 @@ No separate consumer router is part of the home-lab infrastructure. OPNsense is 
 | 10 | `ENTHOST-01` | 10.10.10.3 | Enterprise Proxmox management |
 | 10 | `SECHOST-01` | 10.10.10.4 | Security Proxmox management |
 | 10 | `MGMT-01` | 10.10.10.6 | Management Host |
+| 10 | `MGMT-BACKUP` | 10.10.10.10 | Backup management laptop when locally attached to VLAN 10 |
 | 20 | `WIN11-01` | 10.10.20.10 | Windows 11 workstation |
 | 30 | `WEB-01` | 10.10.30.10 | DMZ web server |
 | 50 | `DC-01` | 10.10.50.10 | Primary domain-controller workload |
 | 50 | `DC-02` | 10.10.50.20 | Planned/rotational second domain controller; approximately 3–4 GB RAM when active |
 | 50 | `FILE-01` | 10.10.50.30 | File server |
 | 50 | `LINUX-01` | 10.10.50.40 | Ubuntu/Linux server |
-| 60 | `KALI-01` | 10.10.60.10 | Bare-metal red-team host |
+| 60 | `READTEAM-01` | 10.10.60.10 | Bare-metal red-team host |
 
 `DC-02` is intentionally part of the planned home lab as a rotational second domain controller at 10.10.50.20 on VLAN 50 SERVERS. Its recommended RAM is approximately 3–4 GB, and it is not part of the normal always-on 22 GB Enterprise VM allocation unless the memory plan is later revised and re-verified.
 
 ## Current Switching Baseline
 
 - `SW-Lab-01` port 1 — OPNsense trunk; tagged VLANs 10/20/30/40/50/60
-- `SW-Lab-01` port 8 — `MGMT-01` / MANAGEMENT PC access; untagged VLAN 10
+- `SW-Lab-01` port 6 — `MGMT-BACKUP`; untagged VLAN 10 MANAGEMENT access
+- `SW-Lab-01` port 7 — `ENTHOST-01` physical attachment; final Proxmox VLAN-aware guest-trunk details remain pending live validation
+- `SW-Lab-01` port 8 — `MGMT-01`; untagged VLAN 10 MANAGEMENT access
 - `SW-Lab-01` management — 10.10.10.2/24; gateway 10.10.10.1
-- All other switch ports — TBD; no permanent role should be inferred
+- Ports 2–5 and 9+ — TBD; no permanent role should be inferred
+
+## Completed SW-Lab-01 Management and Security Baseline — August 20, 2026
+
+- Aruba J9774A management address and gateway verified at 10.10.10.2/24 and 10.10.10.1.
+- Firmware upgraded through the validated TFTP workflow to `YA.16.10.0010` and the switch returned normally after reboot.
+- VLAN and management configuration were saved and verified after reboot.
+- An off-switch configuration backup was exported for recovery/reference.
+- Time synchronization was configured and verified.
+- SNMPv3 was enabled and a dedicated authenticated monitoring user was validated from the management network.
+- Legacy SNMPv1/v2c access using the former public community was tested after hardening and failed as intended, while SNMPv3 continued to succeed.
+- Final screenshot evidence was captured and is pending sanitized upload under `screenshots/aruba/`.
 
 ## OPNsense Policy Baseline
 
@@ -73,7 +88,7 @@ No separate consumer router is part of the home-lab infrastructure. OPNsense is 
 
 ## Virtualization Placement
 
-`ENTHOST-01` uses VLAN 10 for Proxmox management and carries guest workloads on VLANs 20, 30, and 50. `DC-02` is a planned/rotational VLAN 50 workload deployed only after `DC-01` is stable. `SECHOST-01` uses VLAN 10 for Proxmox management and VLAN 40 for the security stack. `KALI-01` is assigned to VLAN 60.
+`ENTHOST-01` uses VLAN 10 for Proxmox management and carries guest workloads on VLANs 20, 30, and 50. `DC-02` is a planned/rotational VLAN 50 workload deployed only after `DC-01` is stable. `SECHOST-01` uses VLAN 10 for Proxmox management and VLAN 40 for the security stack. `READTEAM-01` is assigned to VLAN 60.
 
 ## Security Telemetry
 
@@ -100,4 +115,4 @@ Each implemented control should be documented as **Design → Configuration → 
 
 ## Security / Sanitization
 
-Do not commit passwords, private keys, API tokens, VPN secrets, recovery codes, SNMP community strings, public/ISP-assigned WAN details, serial numbers, or other sensitive identifiers. Sanitized configurations belong under `configs/sanitized/`.
+Do not commit passwords, private keys, API tokens, VPN secrets, recovery codes, SNMP community strings, public/ISP-assigned WAN details, serial numbers, complete MAC addresses, or other sensitive identifiers. Sanitized configurations belong under `configs/sanitized/`.
