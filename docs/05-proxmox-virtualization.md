@@ -15,6 +15,10 @@ Two separate 32 GB Proxmox VE hosts divide enterprise workloads from security-mo
 
 ## `ENTHOST-01` — Enterprise Virtualization Host
 
+### Physical Attachment
+
+`ENTHOST-01` is physically attached to `SW-Lab-01` port 7. The port assignment is now permanent, but the final Proxmox VLAN-aware bridge/trunk configuration and exact tagged/untagged behavior for guest VLANs 20/30/50 remain pending live validation and must not be inferred before that work is complete.
+
 ### Baseline Workloads
 
 | VM | Address | RAM | VLAN | Role |
@@ -67,13 +71,13 @@ The final authoritative VLAN designation source does not yet assign static IP ad
 
 Both Proxmox hosts are administered from VLAN 10 MANAGEMENT:
 
-- `ENTHOST-01` — 10.10.10.3
+- `ENTHOST-01` — 10.10.10.3; physically connected to SW-Lab-01 port 7
 - `SECHOST-01` — 10.10.10.4
-- Administrative access originates from `MGMT-01` — 10.10.10.6
+- Administrative access originates primarily from `MGMT-01` — 10.10.10.6; `MGMT-BACKUP` can provide a secondary VLAN 10 management path when locally connected at 10.10.10.10
 
 ### Enterprise Guest Networks
 
-`ENTHOST-01` must be capable of presenting VLANs 20, 30, and 50 to the appropriate VMs while retaining host management on VLAN 10.
+`ENTHOST-01` must be capable of presenting VLANs 20, 30, and 50 to the appropriate VMs while retaining host management on VLAN 10. The physical port 7 assignment is complete; the final bridge and tagging configuration is not yet complete.
 
 ### Security Guest Networks
 
@@ -86,6 +90,10 @@ The Network Security Monitoring VM is designed to receive mirrored switch traffi
 ## Optional / Rotational Workloads
 
 `DC-02` is a planned/rotational Enterprise workload. Splunk and Security Onion are also not part of their hosts' always-on baselines and may be introduced later as rotational training workloads so required RAM headroom is preserved.
+
+## Relevant Physical Test Host
+
+`READTEAM-01` is the bare-metal Kali Linux red-team host at 10.10.60.10 on VLAN 60 REDTEAM. It is not a Proxmox VM.
 
 ## Implementation Details Still Requiring Live Evidence
 
@@ -115,4 +123,5 @@ Planned VMs, VLAN placement, and sensor paths described here are design targets 
 - *Home Lab Hardware Inventory — UPDATED* — virtualization host roles, VM allocations, and RAM plans.
 - *Authoritative VLAN Designations — final* — Proxmox host labels/addresses and enterprise workload hostname/IP assignments.
 - *Home Lab Network Topology Overview — UPDATED* — VLAN placement and passive security-sensor path.
-- *OPNsense Home Lab Configuration — UPDATED* — VLAN gateway design and current switch trunk baseline.
+- *OPNsense Home Lab Configuration — UPDATED* — VLAN gateway design and switch trunk baseline.
+- Verified SW-Lab-01 live configuration captured August 20, 2026 — `ENTHOST-01` physical attachment on port 7.
