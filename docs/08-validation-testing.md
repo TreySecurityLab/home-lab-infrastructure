@@ -117,8 +117,8 @@ The Aruba management/firmware/SNMPv3 baseline is complete, but guest VLAN accept
 
 ## Source Basis
 
-- *OPNsense Home Lab Configuration — UPDATED* — current acceptance-test matrix, troubleshooting sequence, evidence filenames, and direct ISP WAN.
-- *Authoritative VLAN Designations — final* — host/IP validation targets.
-- *Home Lab Network Topology Overview — UPDATED* — intended traffic and security-zone relationships.
-- *MGMT-01 Remote RDP Resolution Summary* — verified port 6/8 VLAN 10 connectivity.
+- `OPNsense-Phases-3-12-Home-Lab-Configuration-final-2026-08-20.pdf` — current acceptance-test matrix, troubleshooting sequence, evidence filenames, and direct ISP WAN.
+- `Authoritative-VLAN-Designations-final-2026-08-20.txt` — host/IP validation targets.
+- `Home-Lab-Network-Topology-final-2026-08-20.pdf` — intended traffic and security-zone relationships.
+- Supplemental verified management-network evidence — verified port 6/8 VLAN 10 connectivity.
 - Verified SW-Lab-01 live configuration and validation evidence captured August 20, 2026.
