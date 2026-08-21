@@ -4,7 +4,7 @@
 
 **Configured hostname:** `opnsense-fw`  
 **Platform:** Bare-metal OPNsense / 8 GB RAM  
-**Documented scope:** Phases 3ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“12 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â interfaces, VLANs, DHCP, DNS, aliases, firewall policy, and Aruba switch integration.
+**Documented scope:** Phases 3–12 — interfaces, VLANs, DHCP, DNS, aliases, firewall policy, and Aruba switch integration.
 
 This page separates the current repository baseline from temporary recovery settings used while VLAN 10 was repaired. Recovery values are retained only as implementation history so they are not mistaken for permanent architecture.
 
@@ -92,11 +92,11 @@ The authoritative host/IP source uses 10.10.10.1 as the `OPNsense-FW` inventory 
 | VLAN | DHCP | Pool / policy |
 |---:|---|---|
 | 10 MANAGEMENT | No | Static/reserved infrastructure addresses |
-| 20 USERS | Yes | 10.10.20.100ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“10.10.20.199 |
+| 20 USERS | Yes | 10.10.20.100–10.10.20.199 |
 | 30 DMZ | No | Static service addresses |
-| 40 SECOPS | Yes | 10.10.40.100ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“10.10.40.199 |
+| 40 SECOPS | Yes | 10.10.40.100–10.10.40.199 |
 | 50 SERVERS | No | Static server addresses |
-| 60 REDTEAM | Yes | 10.10.60.100ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“10.10.60.199 |
+| 60 REDTEAM | Yes | 10.10.60.100–10.10.60.199 |
 
 Dnsmasq provides DHCP on USERS, SECOPS, and REDTEAM. Dnsmasq **Listen Port = 0** intentionally disables its DNS function. Unbound remains the primary recursive/caching DNS resolver on TCP/UDP 53.
 
@@ -130,19 +130,19 @@ OPNsense is stateful and rule order matters.
 
 ### MANAGEMENT ordered rules
 
-1. PASS TCP/UDP ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â MANAGEMENT net ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ This Firewall ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â 53
-2. PASS TCP ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â MANAGEMENT net ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ This Firewall ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â 443
-3. BLOCK any ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â MANAGEMENT net ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ This Firewall
-4. PASS any ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â MANAGEMENT net ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ `LAB_NETWORKS`
-5. PASS any ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â MANAGEMENT net ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ any
+1. PASS TCP/UDP — MANAGEMENT net → This Firewall — 53
+2. PASS TCP — MANAGEMENT net → This Firewall — 443
+3. BLOCK any — MANAGEMENT net → This Firewall
+4. PASS any — MANAGEMENT net → `LAB_NETWORKS`
+5. PASS any — MANAGEMENT net → any
 
 ### SECOPS ordered rules
 
-1. PASS TCP/UDP ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â SECOPS net ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ This Firewall ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â 53
-2. PASS TCP ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â SECOPS net ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ This Firewall ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â 443
-3. BLOCK any ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â SECOPS net ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ This Firewall
-4. PASS any ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â SECOPS net ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ `LAB_NETWORKS`
-5. PASS any ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â SECOPS net ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ any
+1. PASS TCP/UDP — SECOPS net → This Firewall — 53
+2. PASS TCP — SECOPS net → This Firewall — 443
+3. BLOCK any — SECOPS net → This Firewall
+4. PASS any — SECOPS net → `LAB_NETWORKS`
+5. PASS any — SECOPS net → any
 
 USERS, DMZ, SERVERS, and REDTEAM use the restricted-zone pattern described in the policy table above.
 
@@ -154,15 +154,15 @@ USERS, DMZ, SERVERS, and REDTEAM use the restricted-zone pattern described in th
 | Port 6 | `MGMT-BACKUP` | Untagged VLAN 10 |
 | Port 7 | ENTHOST-01 physical attachment | Final Proxmox VLAN-aware guest-trunk details pending live validation |
 | Port 8 | `MGMT-01` / MANAGEMENT PC access | Untagged VLAN 10 |
-| Ports 2ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“5, 9+ | TBD | Do not infer a permanent role |
+| Ports 2–5, 9+ | TBD | Do not infer a permanent role |
 
 `SW-Lab-01` management is 10.10.10.2/24 with gateway 10.10.10.1.
 
-## Recovery History ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Not Permanent Topology
+## Recovery History — Not Permanent Topology
 
 - 192.168.99.0/24 was used as a temporary recovery LAN while VLAN 10 was repaired.
 - Aruba port 7 temporarily carried VLAN 1 untagged during recovery; its current physical attachment is ENTHOST-01, with final Proxmox VLAN-aware guest-trunk details pending live validation.
-- A temporary `PASS MANAGEMENT net ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ any` rule was used to avoid lockout during VLAN 10 activation. It should not remain as part of the final security baseline once permanent rules are validated.
+- A temporary `PASS MANAGEMENT net → any` rule was used to avoid lockout during VLAN 10 activation. It should not remain as part of the final security baseline once permanent rules are validated.
 
 ## Evidence Status - Captured August 21, 2026
 
@@ -184,7 +184,7 @@ This evidence documents the configured interface/VLAN structure, DHCP/DNS split,
 Public evidence is sanitized to exclude public/ISP-assigned WAN details, complete MAC addresses, credentials, certificates/private keys, VPN peer secrets, and other sensitive identifiers.
 ## Source Basis
 
-- `OPNsense-Phases-3-12-Home-Lab-Configuration-final-2026-08-20.pdf` ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â authoritative Phases 3ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“12 baseline, direct ISP WAN, firewall policy, DHCP/DNS, recovery history, and switch integration.
-- `Authoritative-VLAN-Designations-final-2026-08-20.txt` ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â VLAN networks and host/IP assignments.
-- `Home-Lab-Network-Topology-final-2026-08-20.pdf` ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â direct ISP edge, Layer-3/Layer-2 roles, and workload placement.
-- `Home-Lab-Hardware-Inventory-final-2026-08-20.pdf` ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â OPNsense hardware role and direct-ISP placement.
+- `OPNsense-Phases-3-12-Home-Lab-Configuration-final-2026-08-20.pdf` — authoritative Phases 3–12 baseline, direct ISP WAN, firewall policy, DHCP/DNS, recovery history, and switch integration.
+- `Authoritative-VLAN-Designations-final-2026-08-20.txt` — VLAN networks and host/IP assignments.
+- `Home-Lab-Network-Topology-final-2026-08-20.pdf` — direct ISP edge, Layer-3/Layer-2 roles, and workload placement.
+- `Home-Lab-Hardware-Inventory-final-2026-08-20.pdf` — OPNsense hardware role and direct-ISP placement.
