@@ -131,9 +131,9 @@ The following remain pending and should be added only after verification:
 
 ## Source Basis
 
-- *OPNsense Home Lab Configuration — UPDATED* — firewall policy, DHCP/DNS split, aliases, direct ISP WAN exposure, and switch integration.
-- *Authoritative VLAN Designations — final* — host/IP assignments.
-- *Home Lab Network Topology Overview — UPDATED* — segmentation, telemetry, and security-zone intent.
-- *Home Lab Hardware Inventory — UPDATED* — security tooling roles, management separation, and baseline memory plans.
-- *Aruba 2530 Management and Configuration Guide for AOS-S 16.10* — SNMPv3, time synchronization, firmware, configuration persistence, and management capabilities.
+- `OPNsense-Phases-3-12-Home-Lab-Configuration-final-2026-08-20.pdf` — firewall policy, DHCP/DNS split, aliases, direct ISP WAN exposure, and switch integration.
+- `Authoritative-VLAN-Designations-final-2026-08-20.txt` — host/IP assignments.
+- `Home-Lab-Network-Topology-final-2026-08-20.pdf` — segmentation, telemetry, and security-zone intent.
+- `Home-Lab-Hardware-Inventory-final-2026-08-20.pdf` — security tooling roles, management separation, and baseline memory plans.
+- `Aruba 2530 Management and Configuration Guide for ArubaOS-Switch 16.10.pdf` — SNMPv3, time synchronization, firmware, configuration persistence, and management capabilities.
 - Verified SW-Lab-01 live configuration and validation evidence captured August 20, 2026.
