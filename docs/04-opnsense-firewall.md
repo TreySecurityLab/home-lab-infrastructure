@@ -172,7 +172,7 @@ Public evidence should redact WAN/ISP-assigned addresses, MAC addresses, secrets
 
 ## Source Basis
 
-- *OPNsense Home Lab Configuration — UPDATED* — authoritative Phases 3–12 baseline, direct ISP WAN, firewall policy, DHCP/DNS, recovery history, and switch integration.
-- *Authoritative VLAN Designations — final* — VLAN networks and host/IP assignments.
-- *Home Lab Network Topology Overview — UPDATED* — direct ISP edge, Layer-3/Layer-2 roles, and workload placement.
-- *Home Lab Hardware Inventory — UPDATED* — OPNsense hardware role and direct-ISP placement.
+- `OPNsense-Phases-3-12-Home-Lab-Configuration-final-2026-08-20.pdf` — authoritative Phases 3–12 baseline, direct ISP WAN, firewall policy, DHCP/DNS, recovery history, and switch integration.
+- `Authoritative-VLAN-Designations-final-2026-08-20.txt` — VLAN networks and host/IP assignments.
+- `Home-Lab-Network-Topology-final-2026-08-20.pdf` — direct ISP edge, Layer-3/Layer-2 roles, and workload placement.
+- `Home-Lab-Hardware-Inventory-final-2026-08-20.pdf` — OPNsense hardware role and direct-ISP placement.
