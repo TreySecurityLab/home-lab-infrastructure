@@ -129,9 +129,9 @@ Do not publish switch passwords, SNMP community strings, SNMPv3 authentication/p
 
 ## Source Basis
 
-- *OPNsense Home Lab Configuration — UPDATED* — management addressing and OPNsense trunk baseline.
-- *Aruba 2530 Management and Configuration Guide for AOS-S 16.10* — J9774A applicability and supported VLAN, management, interface, time-sync, SNMPv3, mirroring, firmware, and configuration-verification capabilities.
-- *Authoritative VLAN Designations — final* — management and workload addressing baseline.
-- *Home Lab Network Topology Overview — UPDATED* — Layer-2 role and VLAN transport design.
-- *MGMT-01 Remote RDP Resolution Summary* — verified port 6 and port 8 VLAN 10 access behavior.
+- `OPNsense-Phases-3-12-Home-Lab-Configuration-final-2026-08-20.pdf` — management addressing and OPNsense trunk baseline.
+- `Aruba 2530 Management and Configuration Guide for ArubaOS-Switch 16.10.pdf` — J9774A applicability and supported VLAN, management, interface, time-sync, SNMPv3, mirroring, firmware, and configuration-verification capabilities.
+- `Authoritative-VLAN-Designations-final-2026-08-20.txt` — management and workload addressing baseline.
+- `Home-Lab-Network-Topology-final-2026-08-20.pdf` — Layer-2 role and VLAN transport design.
+- Supplemental verified management-network evidence — verified port 6 and port 8 VLAN 10 access behavior.
 - Live SW-Lab-01 configuration and validation evidence captured August 20, 2026 — firmware, SNMPv3, time synchronization, configuration persistence, and current physical port assignments.

@@ -74,7 +74,7 @@ Planned workloads and telemetry relationships must not be presented as operation
 
 ## Source Basis
 
-- *Home Lab Hardware Inventory — UPDATED* — baseline VM list, RAM allocations, tools, and purposes.
-- *Authoritative VLAN Designations — final* — authoritative hostnames/inventory labels and IP assignments, including `DC-02`.
-- *Home Lab Network Topology Overview — UPDATED* — VLAN placement and telemetry flow.
-- *OPNsense Home Lab Configuration — UPDATED* — gateway and DHCP design.
+- `Home-Lab-Hardware-Inventory-final-2026-08-20.pdf` — baseline VM list, RAM allocations, tools, and purposes.
+- `Authoritative-VLAN-Designations-final-2026-08-20.txt` — authoritative hostnames/inventory labels and IP assignments, including `DC-02`.
+- `Home-Lab-Network-Topology-final-2026-08-20.pdf` — VLAN placement and telemetry flow.
+- `OPNsense-Phases-3-12-Home-Lab-Configuration-final-2026-08-20.pdf` — gateway and DHCP design.

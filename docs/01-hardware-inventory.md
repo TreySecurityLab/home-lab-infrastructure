@@ -107,8 +107,8 @@ Wazuh is the baseline central SIEM/XDR platform. Suricata and Zeek share the Net
 
 ## Source Basis
 
-- *Home Lab Hardware Inventory — UPDATED* — physical systems, VM roles, and baseline memory plans.
-- *Authoritative VLAN Designations — final* — authoritative hostnames/inventory labels and IP assignments.
-- *Home Lab Network Topology Overview — UPDATED* — direct ISP placement, VLAN placement, virtualization roles, and telemetry flow.
-- *OPNsense Home Lab Configuration — UPDATED* — direct ISP WAN and current firewall/switch interface baseline.
-- *MGMT-01 Remote RDP Resolution Summary* — verified port 6 VLAN 10 assignment and MGMT-BACKUP local management address.
+- `Home-Lab-Hardware-Inventory-final-2026-08-20.pdf` — physical systems, VM roles, and baseline memory plans.
+- `Authoritative-VLAN-Designations-final-2026-08-20.txt` — authoritative hostnames/inventory labels and IP assignments.
+- `Home-Lab-Network-Topology-final-2026-08-20.pdf` — direct ISP placement, VLAN placement, virtualization roles, and telemetry flow.
+- `OPNsense-Phases-3-12-Home-Lab-Configuration-final-2026-08-20.pdf` — direct ISP WAN and current firewall/switch interface baseline.
+- Supplemental verified management-network evidence — verified port 6 VLAN 10 assignment and MGMT-BACKUP local management address.

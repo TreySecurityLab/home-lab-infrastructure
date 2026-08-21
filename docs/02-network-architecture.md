@@ -122,9 +122,9 @@ This document is the approved design baseline. A VM, VLAN placement, security ag
 
 ## Source Basis
 
-- *Authoritative VLAN Designations — final* — VLAN IDs, names, /24 networks, and host/IP assignments.
-- *Home Lab Network Topology Overview — UPDATED* — direct ISP path, workload placement, virtualization trunks, and telemetry flow.
-- *OPNsense Home Lab Configuration — UPDATED* — direct ISP WAN, gateway, DHCP, interface, and switch-port baseline.
-- *Home Lab Hardware Inventory — UPDATED* — physical/virtual host roles and memory plans.
-- *MGMT-01 Remote RDP Resolution Summary* — verified port 6 VLAN 10 assignment and backup-management addressing.
+- `Authoritative-VLAN-Designations-final-2026-08-20.txt` — VLAN IDs, names, /24 networks, and host/IP assignments.
+- `Home-Lab-Network-Topology-final-2026-08-20.pdf` — direct ISP path, workload placement, virtualization trunks, and telemetry flow.
+- `OPNsense-Phases-3-12-Home-Lab-Configuration-final-2026-08-20.pdf` — direct ISP WAN, gateway, DHCP, interface, and switch-port baseline.
+- `Home-Lab-Hardware-Inventory-final-2026-08-20.pdf` — physical/virtual host roles and memory plans.
+- Supplemental verified management-network evidence — verified port 6 VLAN 10 assignment and backup-management addressing.
 - Verified SW-Lab-01 live configuration captured August 20, 2026 — current port 1/6/7/8 assignments.
