@@ -120,8 +120,8 @@ Planned VMs, VLAN placement, and sensor paths described here are design targets 
 
 ## Source Basis
 
-- *Home Lab Hardware Inventory — UPDATED* — virtualization host roles, VM allocations, and RAM plans.
-- *Authoritative VLAN Designations — final* — Proxmox host labels/addresses and enterprise workload hostname/IP assignments.
-- *Home Lab Network Topology Overview — UPDATED* — VLAN placement and passive security-sensor path.
-- *OPNsense Home Lab Configuration — UPDATED* — VLAN gateway design and switch trunk baseline.
+- `Home-Lab-Hardware-Inventory-final-2026-08-20.pdf` — virtualization host roles, VM allocations, and RAM plans.
+- `Authoritative-VLAN-Designations-final-2026-08-20.txt` — Proxmox host labels/addresses and enterprise workload hostname/IP assignments.
+- `Home-Lab-Network-Topology-final-2026-08-20.pdf` — VLAN placement and passive security-sensor path.
+- `OPNsense-Phases-3-12-Home-Lab-Configuration-final-2026-08-20.pdf` — VLAN gateway design and switch trunk baseline.
 - Verified SW-Lab-01 live configuration captured August 20, 2026 — `ENTHOST-01` physical attachment on port 7.
